@@ -1,0 +1,14 @@
+v2.0 (20160131)
+===============
+Extensions/changes to version 1.0:
+- New pattern letters: Y, L, u, z, Z and X
+- New property: isNetCompat and also accompanied by new pattern letters: f, g and t
+- New property: isLenient
+- The default value of flexWhiteSpace property is true. Previously, it was false.
+
+Fixing of bugs:
+- The position of the last index after invoking parse method.
+
+
+v1.0 (20080509):
+	-- --

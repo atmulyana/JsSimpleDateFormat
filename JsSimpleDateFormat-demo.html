@@ -43,6 +43,18 @@
 		}
 	}
 	
+	function setCurrentDateTime() {
+		var now = new Date();
+		document.getElementById("year").value = now.getFullYear();
+		document.getElementById("month").value = now.getMonth() + 1;
+		document.getElementById("day").value = now.getDate();
+		document.getElementById("hour").value = ("00" + now.getHours()).substr(-2);
+		document.getElementById("minute").value = ("00" + now.getMinutes()).substr(-2);
+		document.getElementById("second").value = ("00" + now.getSeconds()).substr(-2);
+		document.getElementById("ms").value = ("000" + now.getMilliseconds()).substr(-3);
+		
+	}
+	
 	function showFormattedTime() {
 		var oDt = new Date();
 		var i = parseInt(document.getElementById("year").value.trim(),10);
@@ -60,26 +72,26 @@
 		
 		i = parseInt(document.getElementById("hour").value.trim(),10);
 		oDt.setHours(isNaN(i) ? 0 : i);
-		document.getElementById("hour").value = oDt.getHours();
+		document.getElementById("hour").value = ("00" + oDt.getHours()).substr(-2);
 		
 		i = parseInt(document.getElementById("minute").value.trim(),10);
 		oDt.setMinutes(isNaN(i) ? 0 : i);
-		document.getElementById("minute").value = oDt.getMinutes();
+		document.getElementById("minute").value = ("00" + oDt.getMinutes()).substr(-2);
 		
 		i = parseInt(document.getElementById("second").value.trim(),10);
 		oDt.setSeconds(isNaN(i) ? 0 : i);
-		document.getElementById("second").value = oDt.getSeconds();
+		document.getElementById("second").value = ("00" + oDt.getSeconds()).substr(-2);
 		
 		i = parseInt(document.getElementById("ms").value.trim(),10);
 		oDt.setMilliseconds(isNaN(i) ? 0 : i);
-		document.getElementById("ms").value = oDt.getMilliseconds();
+		document.getElementById("ms").value = ("000" + oDt.getMilliseconds()).substr(-3);
 		
 		var sPattern = document.getElementById("format1").value.trim();
 		if (sPattern == "") sPattern = document.getElementById("format2").value.trim();
 		//var oDf = new JsSimpleDateFormat();
 		//var oDf = new JsSimpleDateFormat(sPattern);
 		//var oDf = new JsSimpleDateFormat(sPattern, new JsDateFormatSymbols(document.getElementById("locale").value));
-		var oDf = new JsSimpleDateFormat(sPattern,document.getElementById("locale").value);
+		var oDf = new JsSimpleDateFormat(sPattern,document.getElementById("locale").value, document.getElementById("chkNetCompat").checked);
 		document.getElementById("formattedTime").value = oDf.format(oDt);
 		//alert(oDt.getTime());
 	}
@@ -89,7 +101,7 @@
 		if (sPattern == "") sPattern = document.getElementById("format2").value.trim();
 		//var oDf = new JsSimpleDateFormat(sPattern);
 		//var oDf = new JsSimpleDateFormat(sPattern, new JsDateFormatSymbols(document.getElementById("locale").value));
-		var oDf = new JsSimpleDateFormat(sPattern,document.getElementById("locale").value);
+		var oDf = new JsSimpleDateFormat(sPattern,document.getElementById("locale").value, document.getElementById("chkNetCompat").checked);
 		var sStartYear = document.getElementById("startYear").value.trim();
 		if (sStartYear != "") {
 			var oStartDate = new Date();
@@ -97,6 +109,7 @@
 			oDf.set2DigitYearStart(oStartDate);
 		}
 		oDf.flexWhiteSpace = (document.getElementById("flexibleWhiteSpace").value.trim().toUpperCase() == "YES");
+		oDf.isLenient = document.getElementById("isLenient").checked;
 		
 		var oPos = {index: parseInt(document.getElementById("startIndex").value), errorIndex: -1};
 		var oDate = oDf.parse(document.getElementById("parseText").value, oPos);
@@ -121,20 +134,48 @@
 	//-->
 	</script>
 </head>
-<body style="margin:5px" onload="prepareDay()">
+<body style="margin:5px" onload="setCurrentDateTime(); prepareDay()">
 <h2>JsSimpleDateFormat Demo</h2>
-<p>Please type the date time format here: <input id="format1" type="text" size="20" /><br/>a
-or if you are not sure please select the format here:
+<p>Please type the date time format here: <input id="format1" type="text" size="40" /><br/>
+or if you are not sure, please select the format here:
 <select id="format2" onchange="document.getElementById('format1').value=''">
+	<!--
 	<option value="M/d/yyyy hh:mm:ss a">M/d/yyyy hh:mm:ss a</option>
+	<option value="M/d/yyyy hh:mm:ss t">M/d/yyyy hh:mm:ss t</option>
 	<option value="MMMM d, yyyy G K:m:s a">MMMM d, yyyy G K:m:s a</option>
+	<option value="MMMM d, YYYY g h:m:s tt">MMMM d, YYYY g h:m:s tt</option>
 	<option value="EEE, MMM d, yy k:m:s">EEE, MMM d, yy k:m:s</option>
-	<option value="yyyy-MM-dd HH:mm:ss.SSS">yyyy-MM-dd HH:mm:ss.SSS</option>
-	<option value="yyyyMMdd">yyyyMMdd</option>
+	<option value="MMMM d, y HH:mm:ss z">MMMM d, y HH:mm:ss z</option>
+	<option value="MMMM dd, yy HH:mm:ss.f zz">MMMM dd, yy HH:mm:ss.f zz</option>
+	<option value="MMMM ddd, yyy HH:mm:ss.ff zzz">MMMM ddd, yyy HH:mm:ss.ff zzz</option>
+	<option value="MMMM dddd, yyyy HH:mm:ss.fff Z">MMMM dddd, yyyy HH:mm:ss.fff Z</option>
+	<option value="yyyy-MM-dd HH:mm:ss.SSS X">yyyy-MM-dd HH:mm:ss.SSS X</option>
+	<option value="yyyy-MM-dd HH:mm:ss.fff XX">yyyy-MM-dd HH:mm:ss.fff XX</option>
+	<option value="yyyyMMdd XXX">yyyyMMdd XXX</option>
 	<option value="'at' k o''cloc'k' on EEEE">'at' k o''cloc'k' on EEEE</option>
 	<option value="W'(st/nd/rd/th) week in this month'">W'(st/nd/rd/th) week in this month'</option>
 	<option value="w'(st/nd/rd/th) week in this year'">w'(st/nd/rd/th) week in this year'</option>
-</select><br/>
+	<option value="'DDD': DDD, 'FFF': FFF">'DDD': DDD, 'FFF': FFF</option>
+	-->
+	<option>M/d/yyyy hh:mm:ss a</option>
+	<option>M/d/yyyy hh:mm:ss t</option>
+	<option>MMMM d, yyyy G K:m:s a</option>
+	<option>MMMM d, YYYY g h:m:s tt</option>
+	<option>EEE, MMM d, yy k:m:s</option>
+	<option>MMMM d, y HH:mm:ss z</option>
+	<option>MMMM dd, yy HH:mm:ss.f zz</option>
+	<option>MMMM ddd, yyy HH:mm:ss.ff zzz</option>
+	<option>MMMM dddd, yyyy HH:mm:ss.fff Z</option>
+	<option>yyyy-MM-dd HH:mm:ss.SSS X</option>
+	<option>yyyy-MM-dd HH:mm:ss.fff XX</option>
+	<option>yyyyMMdd XXX</option>
+	<option>'at' k o''cloc'k' on EEEE</option>
+	<option>W'(st/nd/rd/th) week in this month'</option>
+	<option>w'(st/nd/rd/th) week in this year'</option>
+	<option>'DDD': DDD, 'FFF': FFF</option>
+</select>
+<span style="white-space:nowrap"><input id="chkNetCompat" type="checkbox" />Net Compatible</span>
+<br/>
 Please select a locale:
 <select id="locale">
 	<option value="en">en</option>
@@ -197,7 +238,7 @@ Please select a locale:
 		</select>
 	</td>
 	<td>
-		<input id="year" type="text" maxlength="5" size="6" onkeypress="return; cancelNonNumricKey(arguments[0])" value="2008" />
+		<input id="year" type="text" maxlength="5" size="6" onkeypress="return; cancelNonNumricKey(arguments[0])" value="" />
 	</td>
 	<td>&nbsp;</td>
 	<td>
@@ -232,13 +273,13 @@ Please select a locale:
 </tr>
 </table>
 and then click this <input type="button" onclick="showFormattedTime()" value="button" /> to show formatted time below:<br/>
-<input id="formattedTime" type="text" readonly="1" size="40" /></p>
+<input id="formattedTime" type="text" readonly="1" size="75" /></p>
 
-<p>If you want to parse a date time string, please type the time to parse:
-<input id="parseText" type="text" size="50" /><br/>
+<p>If you want to parse a date time string, please type the date time to parse:
+<input id="parseText" type="text" size="50" /><input id="isLenient" type="checkbox" />Lenient<br/>
 and at which index to start: <input id="startIndex" type="text" size="3" onkeypress="cancelNonNumricKey(arguments[0])" value="0" /><br/>
 and then click this <input type="button" onclick="showParsedTime()" value="button" /> to show parsed time below:<br/>
-Time = <input id="parsedTime" type="text" readonly="1" size="175" /><br/>
+Date Time = <input id="parsedTime" type="text" readonly="1" size="120" /><br/>
 Last index = <input id="lastParsedIndex" type="text" readonly="1" size="4" /><br/>
 Error index = <input id="errorParsedIndex" type="text" readonly="1" size="4" /></p>
 
@@ -252,13 +293,13 @@ Flexible white spaces?
 	<option value="Yes">Yes</option>
 </select>
 </p>
+
 <hr/>
 <font size=-2>This demo has been tested on:
 <ul>
-	<li>Firefox 2</li>
-	<li>Internet Explorer 6</li>
-	<li>Internet Explorer 7</li>
-	<li>Opera 9</li>
+	<li>Google Chrome 49</li>
+	<li>Firefox Nightly 47.0a1</li>
+	<li>Microsoft Edge 25</li>
 </ul>
 </font>
 </body>

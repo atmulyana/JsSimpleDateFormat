@@ -1,8 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <meta http-equiv="content-type"
- content="text/html; charset=ISO-8859-1">
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
   <title>JsSimpleDateFormat Manual</title>
   <style><!--
 body, td {
@@ -25,14 +24,19 @@ font-size: 18px;
 li {
 margin-top: 5px;
 }
+.tbl {
+}
+.tbl td {
+vertical-align: top;
+}
 -->
   </style>
 </head>
 <body>
 <div style="text-align: justify;">
-<h2>JsSimpleDateFormat&nbsp;&nbsp; <small>v1.0</small><br>
+<h2>JsSimpleDateFormat&nbsp;&nbsp; <small>v2.0</small><br>
 <small><small><small>Author: AT Mulyana&nbsp;&nbsp; &nbsp;&nbsp;
-&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; 9 May 2008<br>
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; 31 January 2016<br>
 </small></small></small></h2>
 <h4><br>
 </h4>
@@ -64,156 +68,368 @@ have class in its grammar).
 As mentioned above, <code>JsSimpleDateFormat</code> uses the same pattern
 letters with similar rules as used by Java <code>SimpleDateFormat</code>
 class. To make the same comprehension, the explanation about the pattern
-letters here is copied from <i>Java (TM) 2 Platform Standard Edition 5.0
-API Specification</i> with some modifications and additions.
-<i>Java (TM) 2 Platform Standard Edition 5.0 API Specification</i>
-is copyrighted by Sun Microsystems, Inc.<br/><br/>
+letters here is copied from
+<a href="http://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html">Java Standard Ed. 8 Documentation</a>
+with some modifications to note the difference between <code>JsSimpleDateFormat</code>
+and Java <code>SimpleDateFormat</code>.
+<br/><br/>
 
-<a name="Note_Differences"><b>Note:</b></a> There are some differences between
-<code>JsSimpleDateFormat</code> and Java <code>SimpleDateFormat</code> class:
+Date and time formats are specified by date and time pattern strings. Within date and
+time pattern strings, unquoted certain letters are interpreted as pattern letters
+representing the components of a date or time string. Text can be quoted using single
+quotes (<code>'</code>) to avoid interpretation. "<code>''</code>" represents a single quote.
+<br/><br/>
+
+<a name="Note_Differences"><b>Note:</b></a> There is a prominent difference between
+<code>JsSimpleDateFormat</code> and Java <code>SimpleDateFormat</code> class
+besides the specific pattern letter:
 <ul>
 <li>If there is a letter ('<code>a</code>' to '<code>z</code>' or '<code>A</code>'
     to '<code>Z</code>') in the pattern which doesn't have a representation (not listed
 	in the list below), such as <code>B</code>, Java <code>SimpleDateFormat</code>
 	class will raise error. <code>JsSimpleDateFormat</code>, however, will not
-	interpret that letter but will show that letter as is. Single quote (<code>'</code>)
-	is still be used to avoid interpretation. "<code>''</code>" represents a single
-	quote.
-</li>
-<li>Letter <code>z</code> and <code>Z</code> are not implemented yet by
-    <code>JsSimpleDateFormat</code>.
-</li>
-<li><code>JsSimpleDateFormat</code> always uses strict parser. If using Java
-    <code>SimpleDateFormat</code> class, you must invoke <code>setLenient</code>
-	method by passing <code>false</code> as parameter. In the fact,
-	<code>JsSimpleDateFormat</code> is more strict. With pattern "EEE, MMM d, yyyy",
-	Java <code>SimpleDateFormat</code> class will parse "Mon, Feb 1, 2008"
-	successfully. But in the fact, it's Friday. <code>JsSimpleDateFormat</code>
-	will not allow it. I think, it's better to force the users to be aware
-	about their fault.
-</li>
-<li><code>JsSimpleDateFormat</code> has a new property, that is
-    <a href="#property_flexWhiteSpace"><code>flexWhiteSpace</code></a>.
-    By this property, the user may type any number of space even if in the pattern,
-	there is only one (or another number) space for that position. If this property
-	is set to <code>false</code> (by default), the user must type the exact number of
-	spaces as written in the pattern.
+	interpret that letter but will show that letter as is.
 </li>	
 </ul>
 
 The list of the pattern letters:
  <blockquote>
- <table border=0 cellspacing=3 cellpadding=0>
-     <tr bgcolor="cyan">
-         <th align=left>Letter</th>
-         <th align=left>Date or Time Component</th>
-         <th align=left>Presentation</th>
-         <th align=left>Examples</th>
-	 </tr>
-     <tr>
-         <td><code>G</code></td>
-         <td>Era designator</td>
-         <td><a href="#text">Text</a></td>
-         <td><code>AD</code></td>
-     </tr>
-     <tr bgcolor="#dddddd">
-         <td><code>y</code></td>
-         <td>Year</td>
-         <td><a href="#year">Year</a></td>
-         <td><code>1996</code>; <code>96</code></td>
-     </tr>
-     <tr>
-         <td><code>M</code></td>
-         <td>Month in year</td>
-         <td><a href="#month">Month</a></td>
-         <td><code>July</code>; <code>Jul</code>; <code>07</code></td>
-     </tr>
-     <tr bgcolor="#dddddd">
-         <td><code>w</code></td>
-         <td>Week in year</td>
-         <td><a href="#number">Number</a></td>
-         <td><code>27</code></td>
-     </tr>
-     <tr>
-         <td><code>W</code></td>
-         <td>Week in month</td>
-         <td><a href="#number">Number</a></td>
-         <td><code>2</code></td>
-     </tr>
-     <tr bgcolor="#dddddd">
-         <td><code>D</code></td>
-         <td>Day in year</td>
-         <td><a href="#number">Number</a></td>
-         <td><code>189</code></td>
-     </tr>
-     <tr>
-         <td><code>d</code></td>
-         <td>Day in month</td>
-         <td><a href="#number">Number</a></td>
-         <td><code>10</code></td>
-     </tr>
-     <tr bgcolor="#dddddd">
-         <td><code>F</code></td>
-         <td>Day of week in month</td>
-         <td><a href="#number">Number</a></td>
-         <td><code>2</code></td>
-     </tr>
-     <tr>
-         <td><code>E</code></td>
-         <td>Day in week</td>
-         <td><a href="#text">Text</a></td>
-         <td><code>Tuesday</code>; <code>Tue</code></td>
-     </tr>
-     <tr bgcolor="#dddddd">
-         <td><code>a</code></td>
-         <td>Am/pm marker</td>
-         <td><a href="#text">Text</a></td>
-         <td><code>PM</code></td>
-     </tr>
-     <tr>
-         <td><code>H</code></td>
-         <td>Hour in day (0-23)</td>
-         <td><a href="#number">Number</a></td>
-         <td><code>0</code></td>
-     </tr>
-     <tr bgcolor="#dddddd">
-         <td><code>k</code></td>
-         <td>Hour in day (1-24)</td>
-         <td><a href="#number">Number</a></td>
-         <td><code>24</code></td>
-     </tr>
-     <tr>
-         <td><code>K</code></td>
-         <td>Hour in am/pm (0-11)</td>
-         <td><a href="#number">Number</a></td>
-         <td><code>0</code></td>
-     </tr>
-     <tr bgcolor="#dddddd">
-         <td><code>h</code></td>
-         <td>Hour in am/pm (1-12)</td>
-         <td><a href="#number">Number</a></td>
-         <td><code>12</code></td>
-     </tr>
-     <tr>
-         <td><code>m</code></td>
-         <td>Minute in hour</td>
-         <td><a href="#number">Number</a></td>
-         <td><code>30</code></td>
-     </tr>
-     <tr bgcolor="#dddddd">
-         <td><code>s</code></td>
-         <td>Second in minute</td>
-         <td><a href="#number">Number</a></td>
-         <td><code>55</code></td>
-     </tr>
-     <tr>
-         <td><code>S</code></td>
-         <td>Millisecond</td>
-         <td><a href="#number">Number</a></td>
-         <td><code>978</code></td>
-     </tr>
- </table>
- </blockquote>
+ <table class="tbl" border="0" cellspacing="3" cellpadding="0" summary="Chart shows pattern letters, date/time component, presentation, and examples.">
+  <tbody>
+    <tr style="background-color: rgb(204, 204, 255);">
+      <th align="left">Letter</th>
+      <th align="left">Date or Time Component</th>
+      <th align="left">Presentation</th>
+      <th align="left">Examples</th>
+    </tr>
+    <tr>
+      <td>
+        <a name="letter_G"><code>G</code></a>
+      </td>
+      <td>
+	    Era designator
+	  </td>
+      <td>
+        <a href="#text">Text</a>
+      </td>
+      <td>
+        <code>AD</code>
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>y</code>
+      </td>
+      <td>
+	    Year
+      </td>
+      <td>
+        <a href="#year">Year</a>
+      </td>
+      <td>
+        <code>1996</code>; <code>96</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>Y</code>
+      </td>
+      <td>
+	    Week year
+      </td>
+      <td>
+        <a href="#year">Year</a>
+      </td>
+      <td>
+        <code>2009</code>; <code>09</code>
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>M</code>
+      </td>
+      <td>
+	    Month in year
+      </td>
+      <td>
+        <a href="#month">Month</a>
+      </td>
+      <td>
+        <code>7</code>; <code>07</code>; <code>Jul</code>; <code>July</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>L</code>
+      </td>
+      <td>
+	    Month in year. Different from 'M' letter, it's always interpreted as number
+      </td>
+      <td>
+        <a href="#number">Number</a>
+      </td>
+      <td>
+		<code>7</code>; <code>07</code>; <code>007</code>; <code>0007</code>
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>w</code>
+      </td>
+      <td>
+	    Week in year
+      </td>
+      <td>
+        <a href="#number">Number</a>
+      </td>
+      <td>
+        <code>27</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>W</code>
+      </td>
+      <td>
+	    Week in month
+      </td>
+      <td>
+        <a href="#number">Number</a>
+      </td>
+      <td>
+        <code>2</code>
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>D</code>
+      </td>
+      <td>
+	    Day in year
+      </td>
+      <td>
+        <a href="#number">Number</a>
+      </td>
+      <td>
+        <code>189</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>d</code>
+      </td>
+      <td>
+	    Day in month
+      </td>
+      <td>
+        <a href="#number">Number</a>
+      </td>
+      <td>
+        <code>10</code>
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>F</code>
+      </td>
+      <td>
+	    Day of week in month
+      </td>
+      <td>
+        <a href="#number">Number</a>
+      </td>
+      <td>
+        <code>2</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <a name="letter_E"><code>E</code></a>
+      </td>
+      <td>
+	    Day name in week
+      </td>
+      <td>
+        <a href="#text">Text</a>
+      </td>
+      <td>
+        <code>Tuesday</code>; <code>Tue</code>
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>u</code>
+      </td>
+      <td>
+	    Day number of week (1 = Monday, ..., 7 = Sunday)
+      </td>
+      <td>
+        <a href="#number">Number</a>
+      </td>
+      <td>
+        <code>1</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>a</code>
+      </td>
+      <td>
+	    Am/pm marker
+      </td>
+      <td>
+        <a href="#text">Text</a>
+      </td>
+      <td>
+        <code>PM</code>
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>H</code>
+      </td>
+      <td>
+	    Hour in day (0-23)
+      </td>
+      <td>
+        <a href="#number">Number</a>
+      </td>
+      <td>
+        <code>0</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>k</code>
+      </td>
+      <td>
+	    Hour in day (1-24)
+      </td>
+      <td>
+        <a href="#number">Number</a>
+      </td>
+      <td>
+        <code>24</code>
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>K</code>
+      </td>
+      <td>
+	    Hour in am/pm (0-11)
+      </td>
+      <td>
+        <a href="#number">Number</a>
+      </td>
+      <td>
+        <code>0</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>h</code>
+      </td>
+      <td>
+	    Hour in am/pm (1-12)
+      </td>
+      <td>
+        <a href="#number">Number</a>
+      </td>
+      <td>
+        <code>12</code>
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>m</code>
+      </td>
+      <td>
+	    Minute in hour
+      </td>
+      <td>
+        <a href="#number">Number</a>
+      </td>
+      <td>
+        <code>30</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>s</code>
+      </td>
+      <td>
+	    Second in minute
+      </td>
+      <td>
+        <a href="#number">Number</a>
+      </td>
+      <td>
+        <code>55</code>
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>S</code>
+      </td>
+      <td>
+	    Millisecond
+      </td>
+      <td>
+        <a href="#number">Number</a>
+      </td>
+      <td>
+        <code>978</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <a name="letter_z"><code>z</code></a>
+      </td>
+      <td>
+	    Time zone
+      </td>
+      <td>
+        <a href="#timezone">General time zone</a>
+      </td>
+      <td>
+        For formatting: <code>GMT+07:00</code><br/>
+		For parsing, accepts format: <code>GMT+7:00</code>; <code>UTC</code><br/>
+		Unlike Java, <code>JsSimpleDateFormat</code> doesn't support named time zone
+		such as 'Pacific Standard Time' or 'PST'
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>Z</code>
+      </td>
+      <td>
+	    Time zone
+      </td>
+      <td>
+        <a href="#rfc822timezone">RFC 822 time zone</a>
+      </td>
+      <td>
+        <code>+0700</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>X</code>
+      </td>
+      <td>
+	    Time zone
+      </td>
+      <td>
+        <a href="#iso8601timezone">ISO 8601 time zone</a>
+      </td>
+      <td>
+        <code>+07</code>; <code>+0700</code>; <code>+07:00</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</blockquote>
  Pattern letters are usually repeated, as their number determines the
  exact presentation:
  <ul>
@@ -231,7 +447,7 @@ The list of the pattern letters:
      it's needed to separate two adjacent fields.
  </li>
  <li><strong><a name="year">Year:</a></strong>
-     For formatting, if the number of pattern letters is less than 4, the year
+     For formatting, if the number of pattern letters is 2, the year
      is truncated to 2 digits; otherwise it is interpreted as a
      <a href="#number">Number</a>.<br/>
 	 NOTE: year 0 means 1 BC, year -1 means 2 BC and so on. So if you set year to 0
@@ -263,7 +479,155 @@ The list of the pattern letters:
      interpreted as <a href="#text">Text</a>; otherwise,
      it is interpreted as a <a href="#number">Number</a>.
  </li>
-</ul>	 
+ <li>
+  <strong><a name="timezone">General time zone:</a></strong>
+  Time zone follows the GMT offset value syntax as the following description:
+     
+  <pre>
+    <a name="GMTOffsetTimeZone"><i>GMTOffsetTimeZone:</i></a>
+		<code>GMT</code> <i>Sign</i> <i>Hours</i> <code>:</code> <i>Minutes</i>
+    <i>Sign:</i> one of
+		<code>+ -</code>
+    <i>Hours:</i>
+		<i>Digit</i>
+		<i>Digit</i> <i>Digit</i>
+    <i>Minutes:</i>
+		<i>Digit</i> <i>Digit</i>
+    <i>Digit:</i> one of
+		<code>0 1 2 3 4 5 6 7 8 9</code>
+  </pre>
+  <i>Hours</i> must be between 0 and 23, and 
+  <i>Minutes</i> must be between 00 and 59.
+  <br/><br/>
+  
+  For parsing, <a href="#rfc822timezone">RFC 822 time zones</a> are also accepted.
+  <br/><br/>
+ </li>
+ <li>
+  <strong><a name="rfc822timezone">RFC 822 time zone:</a></strong>
+  For formatting, the RFC 822 4-digit time zone format is used:
+  <pre>
+    <i>RFC822TimeZone:</i>
+		<i>Sign</i> <i>TwoDigitHours</i> <i>Minutes</i>
+    <i>TwoDigitHours:</i>
+		<i>Digit Digit</i>
+  </pre>
+  <i>TwoDigitHours</i> must be between 00 and 23. Other definitions are as for 
+  <a href="#timezone">general time zones</a>.
+  <br/><br/>
+     
+  For parsing, <a href="#timezone">general time zones</a> are also accepted.
+  <br/><br/>
+ </li>
+ <li>
+  <strong><a name="iso8601timezone">ISO 8601 Time zone:</a></strong>
+  The number of pattern letters designates the format for both formatting
+  and parsing as follows:
+     
+  <pre>
+    <i>ISO8601TimeZone:</i>
+		<i>OneLetterISO8601TimeZone</i>
+		<i>TwoLetterISO8601TimeZone</i>
+		<i>ThreeLetterISO8601TimeZone</i>
+    <i>OneLetterISO8601TimeZone:</i>
+		<i>Sign</i> <i>TwoDigitHours</i>
+    <i>TwoLetterISO8601TimeZone:</i>
+		<i>Sign</i> <i>TwoDigitHours</i> <i>Minutes</i>
+    <i>ThreeLetterISO8601TimeZone:</i>
+		<i>Sign</i> <i>TwoDigitHours</i> <code>:</code> <i>Minutes</i>
+  </pre>
+  
+  Other definitions are as for <a href="#timezone">general time zones</a>
+  or <a href="#rfc822timezone">RFC 822 time zones</a>.
+  <br/><br/>
+     
+  If the number of pattern letters is 1, any fraction of an hour is ignored. For example,
+  if the pattern is <code>"X"</code> and the time zone is <code>"GMT+05:30"</code>, 
+  <code>"+05"</code> is produced.
+  <br/><br/>
+  
+  If the number of pattern letters is 4 or more, it's interpreted like 3 letters.
+  <br/><br/>
+ </li>
+</ul>
+
+<h5><a name="Net_Date_and_Time_Patterns">.NET Compatible Date and Time Patterns</a></h5>
+If <a href="#property_isNetCompat"><code>isNetCompat</code></a> is set to <code>true</code> then
+<code>JsSimpleDateFormat</code> date time pattern will be compatible with
+<a href="https://msdn.microsoft.com/en-us/library/8kb3ddd4(v=vs.110).aspx">.NET DateTime Format String</a>.
+It doesn't eliminate the Java version of date time format string, but it extends the formatting
+string. The Java version will still work with some minor differences. .NET version of date time
+format will not be exactly the same as the original one but it should be closely.
+<br><br/>
+
+There are some new pattern letters in .NET compatible mode and also the are some minor differences
+for some existing pattern letters in Java version. The following table is the list of the
+differences and new pattern letters.
+<blockquote>
+<table class="tbl" border="0" cellspacing="3" cellpadding="0">
+  <tbody>
+    <tr style="background-color: rgb(204, 204, 255);">
+      <th align="left">Letter</th>
+      <th align="left">Explanation</th>
+    </tr>
+    <tr>
+      <td>
+        <code>d</code>
+      </td>
+      <td>
+        For 3 or more letters, it's interpreted like <a href="#letter_E">E</a> letter.
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>f</code>
+      </td>
+      <td>
+        One letter is the tenths of a second.<br/>
+		Two letters is the hundredths of a second.<br/>
+		Three or more letters is the milliseconds.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>g</code>
+      </td>
+      <td>
+        The period or era. Like <a href="#letter_G">G</a> letter.
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>t</code>
+      </td>
+      <td>
+        The AM/PM designator. If only one letter, only the first character will be used, such as 'A' for 'AM' and 'P' for 'PM'.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>y</code>
+      </td>
+      <td>
+        In formatting, one letter is also truncated to two digits year. The rest is the same as the Java version.
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>z</code>
+      </td>
+      <td>
+        For formatting, it's like <a href="#letter_z">z</a> letter in Java version.<br/>
+		For parsing, beside accepted format in Java version,<br/>
+		one letter accepts format: "+7" and "+07"<br/>
+		two letters accepts format: "+07"<br/>
+		three or more letters accepts format: "+07:00"
+      </td>
+    </tr>
+  </tbody>
+</table>
+</blockquote>
+
 
 <h3><a name="Class_JsSimpleDateFormat">Class <code>JsSimpleDateFormat</code></a></h3>
 <h4>Constructor</h4>
@@ -300,7 +664,7 @@ The list of the pattern letters:
 		}
 	  </pre>
   </li>
-  <li><code>JsSimpleDateFormat(sPattern)</code><br/>
+  <li><a name="contructor2"><code>JsSimpleDateFormat(sPattern)</code></a><br/>
       Creates a <code>JsSimpleDateFormat</code> object using the pattern
 	  as written in parameter and using default locale
 	  that is English.<br/>
@@ -311,7 +675,7 @@ The list of the pattern letters:
 	    </li>
 	  </ul>
   </li>
-  <li><code>JsSimpleDateFormat(sPattern,sLocale)</code><br/>
+  <li><a name="contructor3"><code>JsSimpleDateFormat(sPattern,sLocale,isNetCompat)</code></a><br/>
       Creates a <code>JsSimpleDateFormat</code> object using the pattern
 	  and the locale as defined by parameter.<br/>
 	  <b>Parameters:</b>
@@ -326,9 +690,13 @@ The list of the pattern letters:
 			one. For further information, see
 			<a href="#Class_JsDateFormatSymbols"><code>JsDateFormatSymbols</code></a>.
 	    </li>
+		<li><code>isNetCompat</code>, optional, is the value for
+		    <a href="#property_isNetCompat"><code>isNetCompat</code></a>
+		    property.
+	    </li>
 	  </ul>
   </li>
-  <li><code>JsSimpleDateFormat(sPattern,oSymbols)</code><br/>
+  <li><code>JsSimpleDateFormat(sPattern,oSymbols,isNetCompat)</code><br/>
       Creates a <code>JsSimpleDateFormat</code> object using the pattern
 	  and the locale as defined by parameter.<br/>
 	  <b>Parameters:</b>
@@ -341,6 +709,10 @@ The list of the pattern letters:
 		    object which defines the name of days, months etc, which are usually shown
 			in date time information.
 	    </li>
+		<li><code>isNetCompat</code>, optional, is the value for
+		    <a href="#property_isNetCompat"><code>isNetCompat</code></a>
+		    property.
+	    </li>
 	  </ul>
   </li>
 </ul>
@@ -349,15 +721,32 @@ The list of the pattern letters:
 <ul>
   <li><a name="property_flexWhiteSpace"><code>flexWhiteSpace</code></a><br/>
       It defines the flexibility of white space (space, tab and new line).
-	  If set to <code>true</code> then the users can type any number of
-	  spaces regardless the number of spaces defined in the pattern for
-	  that position. This flexibility makes easier for the users so that
-	  they don't need to remember how many spaces they have typed.
-	  This setting also ignores the kind of white space (space, tab or new line).
-	  By default, the value of this property is <code>false</code> that will
-	  parse strictly, the number and the kind of white space. This property
-	  must be set before invoking <a href="#method_parse"><code>parse</code></a>
-	  method.
+	  If set to <code>true</code> (by default) then the users can type any
+	  number of spaces regardless the number of spaces defined in the pattern
+	  for that position. This flexibility makes easier for the users so that
+	  they don't need to remember how many spaces they have typed. This setting
+	  also ignores the kind of white space (space, tab or new line). If the
+	  value of this property is <code>false</code>, it will parse strictly, the
+	  number and the kind of white space. This property must be set before
+	  invoking <a href="#method_parse"><code>parse</code></a> method.
+  </li>
+  <li><a name="property_isLenient"><code>isLenient</code></a><br/>
+      By default, <code>JsSimpleDateFormat</code> does strict parsing. It will
+	  check the consistency among date time components. For example, with
+	  pattern "EEE, MMM d, yyyy", it will fail to parse "Mon, Feb 1, 2008"
+	  because in the fact, "Feb 1, 2008" is Friday. If <code>isLenient</code>
+	  is set to <code>true</code>, <code>JsSimpleDateFormat</code> will parse
+	  more loosely. In the previous case, it will parse the string
+	  successfully.
+  </li>
+  <li><a name="property_isNetCompat"><code>isNetCompat</code></a><br/>
+      If it's <code>true</code>, the formatting pattern string will be
+	  compatible with .NET DateTime format string. More explanation, see
+	  <a href="#Net_Date_and_Time_Patterns">.NET Compatible Date and Time
+	  Patterns</a>. This property must be set via
+	  <a href="#contructor3">constructor</a>. If not so, you must re-invoke
+	  <a href="#method_applyPattern"><code>applyPattern</code></a> method after
+	  setting this property.
   </li>
 </ul>
 
