@@ -1,3 +1,10 @@
+v2.0.1 (20160316)
+===============
+Fixing of bugs:
+- Renamed custom property named 'map' which is attached to arrays of symbols. 'map' is an existing array method in javascript.
+- JsDateFormatSymbols.set* methods didn't set 'map' property.
+
+
 v2.0 (20160131)
 ===============
 Extensions/changes to version 1.0:

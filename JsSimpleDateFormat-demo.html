@@ -102,6 +102,7 @@
 		//var oDf = new JsSimpleDateFormat(sPattern);
 		//var oDf = new JsSimpleDateFormat(sPattern, new JsDateFormatSymbols(document.getElementById("locale").value));
 		var oDf = new JsSimpleDateFormat(sPattern,document.getElementById("locale").value, document.getElementById("chkNetCompat").checked);
+		//var oDf = new MyJsSimpleDateFormat(sPattern,document.getElementById("locale").value, document.getElementById("chkNetCompat").checked);
 		var sStartYear = document.getElementById("startYear").value.trim();
 		if (sStartYear != "") {
 			var oStartDate = new Date();
@@ -129,6 +130,9 @@
 	MyJsSimpleDateFormat.__extends__(JsSimpleDateFormat, {
 	_getDefaultPattern: function() {
 		return "yyyyMMdd HH:mm a";
+	},
+	_getInitDate: function() {
+		return new Date(2016,0,31);
 	}
 	});
 	//-->
