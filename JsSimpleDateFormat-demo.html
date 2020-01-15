@@ -1,11 +1,12 @@
+<!DOCTYPE html>
 <html>
 <head>
 	<title>JsSimpleDateFormat Demo</title>
-	<script type="text/javascript" language="JavaScript" src="JsSimpleDateFormat.js"></script>
-	<script type="text/javascript" language="JavaScript"><!--
+	<script src="JsSimpleDateFormat.min.js"></script>
+	<script>
 	String.prototype.trim = function() {
 		return this.toString().replace(/^\s+/,"").replace(/\s+$/,"");
-	}
+	};
 	
 	function cancelNonNumricKey(e) {
 		if (!e) e = window.event;
@@ -135,7 +136,6 @@
 		return new Date(2016,0,31);
 	}
 	});
-	//-->
 	</script>
 </head>
 <body style="margin:5px" onload="setCurrentDateTime(); prepareDay()">
@@ -298,13 +298,13 @@ Flexible white spaces?
 </select>
 </p>
 
-<hr/>
+<!-- <hr/>
 <font size=-2>This demo has been tested on:
 <ul>
 	<li>Google Chrome 49</li>
 	<li>Firefox Nightly 47.0a1</li>
 	<li>Microsoft Edge 25</li>
 </ul>
-</font>
+</font> -->
 </body>
 </html>

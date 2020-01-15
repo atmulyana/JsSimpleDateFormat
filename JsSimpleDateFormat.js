@@ -1,15 +1,15 @@
 /*! ****
-JsSimpleDateFormat v2.0.1 (20160316)
+JsSimpleDateFormat v2.1 (20200115)
 This library is for formatting and parsing date time
 
-Copyright (C) 2008, 2016 AT Mulyana (atmulyana@yahoo.com)
+Copyright (C) 2008, 2016, 2020 AT Mulyana (atmulyana@yahoo.com)
 
 This library is free software; you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License version 3.0
 or later version
 See http://gnu.org/licenses/lgpl.html
 
-Send the bug report to 'atmulyana@yahoo.com'
+Visit https://github.com/atmulyana/JsSimpleDateFormat
 *****/
 Function.prototype.__extends__ = function(fParent,oExtMembers) {
 	this.prototype = new fParent();
@@ -22,9 +22,10 @@ Function.prototype.__extends__ = function(fParent,oExtMembers) {
 
 function JsDateFormatSymbols(sLocale) {
 	if (!JsDateFormatSymbols.__symbols__[sLocale]) sLocale = 'en';
-	var oSymbols = JsDateFormatSymbols.__symbols__[sLocale];
-	for (p in oSymbols) {
-		var ar = [].concat(oSymbols[p]);
+	var oSymbols = JsDateFormatSymbols.__symbols__[sLocale],
+	    oDefSymbols = JsDateFormatSymbols.__symbols__.en;
+	for (p in oDefSymbols) {
+		var ar = [].concat(oSymbols[p] || oDefSymbols[p]);
 		this._setMap(ar);
 		this['_'+p] = ar;
 	}
@@ -150,6 +151,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	};
 
+	/** Represents the part in pattern that will not be interpreted (in parsing or fromatting) */
 	function Str(sInitVal) {
 		Base.call(this);
 		this._vals = [];
@@ -179,6 +181,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 
+	/** Base class for letters that have meaning in pattern  */
 	function Ltr() {
 		Base.call(this);
 		this._count = 1;
@@ -204,6 +207,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 
+	/** Base class for pattern letters which represent the text such as day name, month name, am/pm and era designator. */
 	function Text() {
 		Ltr.call(this);
 	}
@@ -255,11 +259,13 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 
-	function Number() {
+
+	/** Base class for pattern letters which represent the number such as day of month, hour, minute etc. */
+	function Numb() {
 		Ltr.call(this);
 	}
-	JsSimpleDateFormat._Number = Number;
-	Number.__extends__(Ltr, {
+	JsSimpleDateFormat._Number = Numb;
+	Numb.__extends__(Ltr, {
 		getNumber: function() {
 			return this.getValue();
 		},
@@ -297,12 +303,13 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 
+	/** Base class for pattern letters which represent the month. The month can be written as a text (January, February etc.) or as a number (1, 2 etc.). */
 	function Month() {
-		Number.call(this);
+		Numb.call(this);
 		Text.call(this);
 	}
 	JsSimpleDateFormat._Month = Month;
-	Month.__extends__(Number, Text.prototype, {
+	Month.__extends__(Numb, Text.prototype, {
 		name: "month",
 		isNumber: function() {
 			return this._count < 3;
@@ -311,20 +318,21 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 			return iVal >= 1 && iVal <= 12;
 		},
 		parse: function(s,isNN) {
-			if (this.isNumber()) return Number.prototype.parse.call(this,s,isNN);
+			if (this.isNumber()) return Numb.prototype.parse.call(this,s,isNN);
 			return Text.prototype.parse.call(this,s,isNN);
 		},
 		toStr: function() {
-			if (this.isNumber()) return Number.prototype.toStr.call(this);
+			if (this.isNumber()) return Numb.prototype.toStr.call(this);
 			return Text.prototype.toStr.call(this);
 		}
 	});
 
+	/** Base class for pattern letters which represent the year. */
 	function Year() {
-		Number.call(this);
+		Numb.call(this);
 	}
 	JsSimpleDateFormat._Year = Year;
-	Year.__extends__(Number, {
+	Year.__extends__(Numb, {
 		name: "year",
 		stC: 1900,
 		stY: 1970,
@@ -334,7 +342,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 				s = s.substr(1);
 				j++;
 			}
-			var i = Number.prototype.parse.call(this,s,isNN);
+			var i = Numb.prototype.parse.call(this,s,isNN);
 			if (i == -1) return -1;
 			if (j > 0) this._parseVal = -this._parseVal;
 			if (this._count < 3/*yy or y*/ && this._parseVal > 0 && i == 2/*exactly 2 digits, not less/more*/) {
@@ -350,13 +358,14 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 				if (sVal.length < 2 && this._count == 2) return "0"+sVal;
 				return sVal;
 			}
-			return Number.prototype.toStr.call(this);
+			return Numb.prototype.toStr.call(this);
 		}
 	});
 	
 	var ltr = {};
 	JsSimpleDateFormat._ltr = ltr;
 	
+	/** Era designator such as AD or BC */
 	ltr.G = function() {
 		Text.call(this);
 	}
@@ -373,6 +382,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** Era designator (.Net pattern) such as AD or BC */
 	ltr.g = function() {
 		ltr.G.call(this);
 	}
@@ -400,6 +410,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** Week year. It may be different from y pattern at the last week of the year. */
 	ltr.Y = function() {
 		ltr.y.call(this);
 	}
@@ -424,10 +435,11 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
-	ltr.M = function() {
+	/** Month */
+	ltr.L = function() {
 		Month.call(this);
 	}
-	ltr.M.__extends__(Month, {
+	ltr.L.__extends__(Month, {
 		applyParseValue: function(oDate,oFields) {
 			var iVal = this.getParseValue(), iD = oDate.getDate();
 			oDate.setMonth(iVal);
@@ -451,19 +463,17 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
-	ltr.L = function() {
-		ltr.M.call(this);
+	/** Month */
+	ltr.M = function() {
+		ltr.L.call(this);
 	}
-	ltr.L.__extends__(ltr.M, {
-		isNumber: function() {
-			return true;
-		}
-	});
+	ltr.M.__extends__(ltr.L); //It should overrides L to support context-sensitive form
 	
+	/** The day sequence number (day-th) in the specified year. Starting at Jan 1 which is numbered as 1 and so on until Dec 31 that will be numbered as 365 (366 in leap year). */
 	ltr.D = function() {
-		Number.call(this);
+		Numb.call(this);
 	}
-	ltr.D.__extends__(Number, {
+	ltr.D.__extends__(Numb, {
 		_ends: [31,28,31,30,31,30,31,31,30,31,30,31],
 		name: "dayOfYear",
 		_checkLeapYear: function(oDate) {
@@ -498,6 +508,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** Day name in a week such as Sunday, Monday, Tue etc. */
 	ltr.E = function() {
 		Text.call(this);
 	}
@@ -519,6 +530,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** The day number in a month. If it has 3 or more letters then it's the day name like ltr.E for .Net compatibility. */
 	ltr.d = function() {
 		ltr.D.call(this);
 	}
@@ -562,6 +574,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** The week sequence number (week-th) in the specified year */
 	ltr.w = function() {
 		ltr.D.call(this);
 	}
@@ -573,7 +586,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		applyParseValue: function(oDate,oFields) {
 			oDate.setDate(1);
 			this._resetMonth(oDate);
-			oDate.setTime(oDate.getTime() - oDate.getDay()*86400000 + (this._parseVal-1)*7*86400000); //86400000 == ms per day
+			oDate.setTime(oDate.getTime() - oDate.getDay() * 86400000 + (this._parseVal - 1) * 7 * 86400000); //86400000 == ms per day
 			return oDate;
 		},
 		getParseValue: function() {
@@ -595,6 +608,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** The week sequence number (week-th) in the specified month */
 	ltr.W = function() {
 		ltr.w.call(this);
 	}
@@ -610,13 +624,15 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+
+	/** The week-th in the month, if the first seven days in that month is the first week, the eightth day up to the forteenth day is the second week and so on. */
 	ltr.F = function() {
-		Number.call(this);
+		Numb.call(this);
 	}
-	ltr.F.__extends__(Number, {
+	ltr.F.__extends__(Numb, {
 		name: "dayOfWeekInMonth",
 		applyParseValue: function(oDate,oFields) {
-			oDate.setDate((this.getParseValue()-1)*7 + 1);
+			oDate.setDate((this.getParseValue() - 1) * 7 + 1);
 			oDate.setDate(oDate.getDate() + 7 - oDate.getDay());
 			return oDate;
 		},
@@ -628,10 +644,11 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** Day number of week (1 = Monday, ..., 7 = Sunday) */
 	ltr.u = function() {
-		Number.call(this);
+		Numb.call(this);
 	}
-	ltr.u.__extends__(Number, {
+	ltr.u.__extends__(Numb, {
 		name: "dayOfWeek",
 		applyParseValue: function(oDate,oFields) {
 			oDate.setDate(1);
@@ -649,6 +666,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** AM/PM marker in time */
 	ltr.a = function() {
 		Text.call(this);
 	}
@@ -668,6 +686,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** AM/PM marker in time (.Net pattern) */
 	ltr.t = function() {
 		ltr.a.call(this);
 	}
@@ -681,10 +700,11 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** Hour (0-23) */
 	ltr.H = function() {
-		Number.call(this);
+		Numb.call(this);
 	}
-	ltr.H.__extends__(Number, {
+	ltr.H.__extends__(Numb, {
 		name: "hour",
 		applyParseValue: function(oDate,oFields) {
 			oDate.setHours(this.getParseValue());
@@ -698,6 +718,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** Hour (1-24) */
 	ltr.k = function() {
 		ltr.H.call(this);
 	}
@@ -714,10 +735,11 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** Hour (0-11). Should be accompanied by AM/PM */
 	ltr.K = function() {
-		Number.call(this);
+		Numb.call(this);
 	}
-	ltr.K.__extends__(Number, {
+	ltr.K.__extends__(Numb, {
 		name: "h12",
 		applyParseValue: function(oDate,oFields) {
 			var iVal = this.getParseValue();
@@ -733,6 +755,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** Hour (1-12). Should be accompanied by AM/PM */
 	ltr.h = function() {
 		ltr.K.call(this);
 	}
@@ -749,10 +772,11 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** Minute */
 	ltr.m = function() {
-		Number.call(this);
+		Numb.call(this);
 	}
-	ltr.m.__extends__(Number, {
+	ltr.m.__extends__(Numb, {
 		name: "minute",
 		applyParseValue: function(oDate,oFields) {
 			oDate.setMinutes(this.getParseValue());
@@ -766,10 +790,11 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** second */
 	ltr.s = function() {
-		Number.call(this);
+		Numb.call(this);
 	}
-	ltr.s.__extends__(Number, {
+	ltr.s.__extends__(Numb, {
 		name: "second",
 		applyParseValue: function(oDate,oFields) {
 			oDate.setSeconds(this.getParseValue());
@@ -783,10 +808,11 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** millisecond */
 	ltr.S = function() {
-		Number.call(this);
+		Numb.call(this);
 	}
-	ltr.S.__extends__(Number, {
+	ltr.S.__extends__(Numb, {
 		name: "ms",
 		applyParseValue: function(oDate,oFields) {
 			oDate.setMilliseconds(this.getParseValue());
@@ -800,6 +826,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** millisecond (.Net pattern) */
 	ltr.f = function() {
 		ltr.S.call(this);
 	}
@@ -825,6 +852,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** General time zone */
 	ltr.z = function() {
 		Text.call(this);
 	}
@@ -902,6 +930,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** RFC 822 time zone */
 	ltr.Z = function() {
 		ltr.z.call(this);
 	}
@@ -912,6 +941,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
+	/** ISO 8601 time zone */
 	ltr.X = function() {
 		ltr.z.call(this);
 	}
@@ -1001,6 +1031,7 @@ get2DigitYearStart: function() {
 getDateFormatSymbols: function() {
 	return this._fmtSb;
 },
+//The order of fields that must be applied to the Date object as the result of parsing value
 _arFN: ["year","month","dayOfWeek","dayOfWeekInMonth","weekOfMonth","weekOfYear","dayOfYear",
 		"day", "weekYear", "hour","h12","minute","second","ms"],
 parse: function(s,oPos) {
@@ -1074,3 +1105,9 @@ toPattern: function() {
 	return this._ptn;
 }
 };
+
+
+if (typeof(global) == 'object') {
+	global.JsDateFormatSymbols = JsDateFormatSymbols;
+	global.JsSimpleDateFormat = JsSimpleDateFormat;
+}

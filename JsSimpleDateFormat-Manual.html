@@ -3,23 +3,23 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
   <title>JsSimpleDateFormat Manual</title>
-  <style><!--
-body, td {
-font-size: 16px;
+  <style>
+head, body, table {
+font-size: large;
 }
 code, pre {
 font-family: monospace;
-font-size: 13px;
+font-size: 1rem;
 }
 h3 {
-font-size: 20px;
+font-size: 1.25rem;
 }
 h3 code {
-font-size: 18px;
+font-size: 1.125rem;
 font-weight: 900;
 }
 h4 {
-font-size: 18px;
+font-size: 1.125rem;
 }
 li {
 margin-top: 5px;
@@ -29,14 +29,13 @@ margin-top: 5px;
 .tbl td {
 vertical-align: top;
 }
--->
   </style>
 </head>
 <body>
 <div style="text-align: justify;">
-<h2>JsSimpleDateFormat&nbsp;&nbsp; <small>v2.0</small><br>
+<h2>JsSimpleDateFormat&nbsp;&nbsp; <small>v2.1</small><br>
 <small><small><small>Author: AT Mulyana&nbsp;&nbsp; &nbsp;&nbsp;
-&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; 31 January 2016<br>
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; 15 January 2020<br>
 </small></small></small></h2>
 <h4><br>
 </h4>
@@ -46,7 +45,7 @@ vertical-align: top;
   <li><a href="#Date_and_Time_Patterns">Date and Time Patterns</a></li>
   <li><a href="#Class_JsSimpleDateFormat">Class <code>JsSimpleDateFormat</code></a></li>
   <li><a href="#Class_JsDateFormatSymbols">Class <code>JsDateFormatSymbols</code></a></li>
-  <li><a href="#Bugs_Report">Bugs Report</a></li>
+  <!--<li><a href="#Used_as_Nodejs_Module">Used as Node.js Module</a></li>-->
 </ul>
 
 <h3><a name="Description">Description</a></h3>
@@ -60,8 +59,6 @@ use <code>JsSimpleDateFormat</code> easily.<br/><br/>
 This library contains two main classes, those are
 <a href="#Class_JsSimpleDateFormat"><code>JsSimpleDateFormat</code></a>
 and <a href="#Class_JsDateFormatSymbols"><code>JsDateFormatSymbols</code></a>.
-(We still use <i>Class</i> term, even if in the fact, Javascript doesn't
-have class in its grammar).
 <br>
 
 <h3><a name="Date_and_Time_Patterns">Date and Time Patterns</a></h3>
@@ -149,7 +146,10 @@ The list of the pattern letters:
         <code>M</code>
       </td>
       <td>
-	    Month in year
+      Month in year.<br/>
+      Java <code>SimpleDateFormat</code> interprets this letter as month with context sensitive.<br/>
+      <code>JsSimpleDateFormat</code> doesn't support the context sensitive format.
+      So, it will be exactly the same as 'L' letter.
       </td>
       <td>
         <a href="#month">Month</a>
@@ -163,10 +163,10 @@ The list of the pattern letters:
         <code>L</code>
       </td>
       <td>
-	    Month in year. Different from 'M' letter, it's always interpreted as number
+	    Month in year (standalone form)
       </td>
       <td>
-        <a href="#number">Number</a>
+        <a href="#month">Month</a>
       </td>
       <td>
 		<code>7</code>; <code>07</code>; <code>007</code>; <code>0007</code>
@@ -1064,8 +1064,7 @@ document after inserting JsSimpleDateFormat.js.</p>
   </li>
 </ul>
 
-<h3><a name="Bugs_Report">Bugs Report</a></h3>
-You may send bug reports to <a href="mailto:atmulyana@yahoo.com">atmulyana@yahoo.com</a>.
+<!--<h3><a name="#Used_as_Nodejs_Module">Used as Node.js Module</a></h3>-->
 
 </div>
 </body>
