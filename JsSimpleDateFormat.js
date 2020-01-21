@@ -1,5 +1,5 @@
 /*! ****
-JsSimpleDateFormat v2.1 (20200115)
+JsSimpleDateFormat v2.1 (20200121)
 This library is for formatting and parsing date time
 
 Copyright (C) 2008, 2016, 2020 AT Mulyana (atmulyana@yahoo.com)
@@ -1107,7 +1107,7 @@ toPattern: function() {
 };
 
 
-if (typeof(global) == 'object') {
-	global.JsDateFormatSymbols = JsDateFormatSymbols;
-	global.JsSimpleDateFormat = JsSimpleDateFormat;
+if (typeof(module) == 'object' && !!module.exports) {
+	module.exports.JsDateFormatSymbols = JsDateFormatSymbols;
+	module.exports.JsSimpleDateFormat = JsSimpleDateFormat;
 }

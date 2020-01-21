@@ -1,0 +1,25 @@
+{
+  "name": "jssimpledateformat",
+  "version": "2.1.0",
+  "description": "for formatting/parsing date time",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atmulyana/JsSimpleDateFormat.git"
+  },
+  "keywords": [
+    "format",
+    "parsing",
+    "date",
+    "time"
+  ],
+  "author": "AT Mulyana",
+  "license": "LGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/atmulyana/JsSimpleDateFormat/issues"
+  },
+  "homepage": "https://github.com/atmulyana/JsSimpleDateFormat#readme"
+}

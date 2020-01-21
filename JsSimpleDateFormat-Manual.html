@@ -7,6 +7,9 @@
 head, body, table {
 font-size: large;
 }
+small {
+font-size: medium;
+}
 code, pre {
 font-family: monospace;
 font-size: 1rem;
@@ -35,7 +38,7 @@ vertical-align: top;
 <div style="text-align: justify;">
 <h2>JsSimpleDateFormat&nbsp;&nbsp; <small>v2.1</small><br>
 <small><small><small>Author: AT Mulyana&nbsp;&nbsp; &nbsp;&nbsp;
-&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; 15 January 2020<br>
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; Last edited: 15 January 2020<br>
 </small></small></small></h2>
 <h4><br>
 </h4>
