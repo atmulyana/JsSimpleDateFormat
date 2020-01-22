@@ -36,12 +36,10 @@ vertical-align: top;
 </head>
 <body>
 <div style="text-align: justify;">
-<h2>JsSimpleDateFormat&nbsp;&nbsp; <small>v2.1</small><br>
-<small><small><small>Author: AT Mulyana&nbsp;&nbsp; &nbsp;&nbsp;
-&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; Last edited: 15 January 2020<br>
-</small></small></small></h2>
-<h4><br>
-</h4>
+<h2 style='display:inline'>JsSimpleDateFormat</h2>&nbsp;&nbsp; <h6 style='display:inline'>v2.1</h6><br>
+<h6 style='margin-top:0px'>Author: AT Mulyana&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; Last edited: 15 January 2020</h6>
+
 <h3>Table of Contents</h3>
 <ul>
   <li><a href="#Description">Description</a></li>
