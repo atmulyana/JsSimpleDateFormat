@@ -1,42 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
-  <title>JsSimpleDateFormat Manual</title>
-  <style>
-head, body, table {
-font-size: large;
-}
-small {
-font-size: medium;
-}
-code, pre {
-font-family: monospace;
-font-size: 1rem;
-}
-h3 {
-font-size: 1.25rem;
-}
-h3 code {
-font-size: 1.125rem;
-font-weight: 900;
-}
-h4 {
-font-size: 1.125rem;
-}
-li {
-margin-top: 5px;
-}
-.tbl {
-}
-.tbl td {
-vertical-align: top;
-}
-  </style>
-</head>
-<body>
 <div style="text-align: justify;">
-<h2 style='display:inline'>JsSimpleDateFormat</h2>&nbsp;&nbsp; <h6 style='display:inline'>v2.1</h6><br>
+<h2 style='display:inline'>JsSimpleDateFormat</h2>
+
+<h6 style='display:inline'>&nbsp;&nbsp;v2.1</h6><br>
+
 <h6 style='margin-top:0px'>Author: AT Mulyana&nbsp;&nbsp; &nbsp;&nbsp;
 &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; Last edited: 15 January 2020</h6>
 
@@ -1068,5 +1034,3 @@ document after inserting JsSimpleDateFormat.js.</p>
 <!--<h3><a name="#Used_as_Nodejs_Module">Used as Node.js Module</a></h3>-->
 
 </div>
-</body>
-</html>
