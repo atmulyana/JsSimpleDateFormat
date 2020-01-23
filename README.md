@@ -1,12 +1,8 @@
 <div style="text-align: justify;">
-
 <h2 style='display:inline'>JsSimpleDateFormat</h2>
-
 <h6 style='display:inline'>&nbsp;&nbsp;v2.1</h6>
-
 <h6 style='margin-top:0px'>Author: AT Mulyana&nbsp;&nbsp; &nbsp;&nbsp;
 &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; Last edited: 15 January 2020</h6>
-
 <h3>Table of Contents</h3>
 <ul>
   <li><a href="#Description">Description</a></li>
@@ -421,12 +417,10 @@ The list of the pattern letters:
 	 NOTE: year 0 means 1 BC, year -1 means 2 BC and so on. So if you set year to 0
 	 then it will be shown as 1, -1 will be shown as 2 and so on. Perhaps, it's better
 	 to show era designator field.
-	 
      <p>For parsing, if the number of pattern letters is more than 2,
      the year is interpreted literally, regardless of the number of
      digits. So using the pattern "MM/dd/yyyy", "01/11/12" parses to
-     Jan 11, 12 A.D.
-	 </p>
+     Jan 11, 12 A.D.</p>
      <p>For parsing with the abbreviated year pattern ("y" or "yy"),
      <code>JsSimpleDateFormat</code> must interpret the abbreviated year
      relative to some century. The begin of century is set by 
