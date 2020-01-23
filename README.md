@@ -602,25 +602,25 @@ differences and new pattern letters.
 	  <code>_getDefaultPattern</code> method, like the below one. Suppose the
 	  default pattern you want is <nobr>"MMM dd, yyyy HH:mm a"</nobr>:	  
 	  <pre>
-		function MyJsSimpleDateFormat() {
-			JsSimpleDateFormat.apply(this,arguments);
-		}
-		MyJsSimpleDateFormat.__extends__(JsSimpleDateFormat, {
-		_getDefaultPattern: function() {
-			return "MMM dd, yyyy HH:mm a";
-		}
-		});
+	function MyJsSimpleDateFormat() {
+		JsSimpleDateFormat.apply(this,arguments);
+	}
+	MyJsSimpleDateFormat.__extends__(JsSimpleDateFormat, {
+	_getDefaultPattern: function() {
+		return "MMM dd, yyyy HH:mm a";
+	}
+	});
 	  </pre>	  
 	  <p><code>__extends__</code> method is written in JsSimpleDateFormat.js.
 	  If using usual way, we write like this:</p>
 	  <pre>
-		function MyJsSimpleDateFormat() {
-			JsSimpleDateFormat.apply(this,arguments);
-		}
-		MyJsSimpleDateFormat.prototype = new JsSimpleDateFormat();
-		MyJsSimpleDateFormat.prototype._getDefaultPattern = function() {
-			return "MMM dd, yyyy HH:mm a";
-		}
+	function MyJsSimpleDateFormat() {
+		JsSimpleDateFormat.apply(this,arguments);
+	}
+	MyJsSimpleDateFormat.prototype = new JsSimpleDateFormat();
+	MyJsSimpleDateFormat.prototype._getDefaultPattern = function() {
+		return "MMM dd, yyyy HH:mm a";
+	}
 	  </pre>
   </li>
   <li><a name="contructor2"><code>JsSimpleDateFormat(sPattern)</code></a><br/>
@@ -760,25 +760,25 @@ differences and new pattern letters.
 	  and overwrite <code>_getInitDate</code> method as below (suppose you want
 	  the iniatial date time is the current date time):<br/>
 	  <pre>
-		function MyJsSimpleDateFormat() {
-			JsSimpleDateFormat.apply(this,arguments);
-		}
-		MyJsSimpleDateFormat.__extends__(JsSimpleDateFormat, {
-		_getInitDate: function() {
-			return new Date();
-		}
-		});
+	function MyJsSimpleDateFormat() {
+		JsSimpleDateFormat.apply(this,arguments);
+	}
+	MyJsSimpleDateFormat.__extends__(JsSimpleDateFormat, {
+	_getInitDate: function() {
+		return new Date();
+	}
+	});
 	  </pre>
 	  <p><code>__extends__</code> method is written in JsSimpleDateFormat.js.
 	  If using usual way, we write like this:</p>
 	  <pre>
-		function MyJsSimpleDateFormat() {
-			JsSimpleDateFormat.apply(this,arguments);
-		}
-		MyJsSimpleDateFormat.prototype = new JsSimpleDateFormat();
-		MyJsSimpleDateFormat.prototype._getInitDate = function() {
-			return new Date();
-		}
+	function MyJsSimpleDateFormat() {
+		JsSimpleDateFormat.apply(this,arguments);
+	}
+	MyJsSimpleDateFormat.prototype = new JsSimpleDateFormat();
+	MyJsSimpleDateFormat.prototype._getInitDate = function() {
+		return new Date();
+	}
 	  </pre>
 	  <p>This method will return <code>null</code> if the string cannot be parsed
 	  to be a valid date time. Note, the method may not use the entire text, only
@@ -807,10 +807,10 @@ differences and new pattern letters.
 	  If an error occurs, the <code>index</code> property will not be updated but the
 	  <code>errorIndex</code> property will be updated. Example:
 	  <pre>
-		var oDf = new JsSimpleDateFormat("MMM d, yyyy");
-		var s = "The date of Jan 3, 2008 is Thursday";
-		var oPos = {index: 12, errorIndex: -1};
-		var oDate = oDf.parse(s, oPos);
+	var oDf = new JsSimpleDateFormat("MMM d, yyyy");
+	var s = "The date of Jan 3, 2008 is Thursday";
+	var oPos = {index: 12, errorIndex: -1};
+	var oDate = oDf.parse(s, oPos);
 	  </pre>
 	  <p>After parsing, <code>index</code> property will be updated become 23.
 	  As example above, initiate the value of <code>errorIndex</code> property
@@ -823,7 +823,7 @@ differences and new pattern letters.
 	  If you don't need the return back about index but only want to determine the
 	  starting index, you may do it like this:</p>
 	  <pre>
-		var oDate = oDf.parse(s, {index:3});
+	var oDate = oDf.parse(s, {index:3});
 	  </pre>
 	  <p>For further information, see another <a href="#method_parse"><code>parse</code></a>
 	  method.</p>
@@ -896,16 +896,16 @@ words, you can set the new keywords according to your languange.<br/>
 <br/>
 Below is an example how to change the keywords:
 	<pre>
-		var oDf = new JsSimpleDateFormat("MMM d, yyyy");
-		var oSymbols = new JsDateFormatSymbols();
-		oSymbols.setAmPmStrings(['AM','PM']);
-		oSymbols.setEras(['AD','BC']);
-		oSymbols.setMonths(['January','February','March','April','May','June','July','August','September','October','November','December']);
-		oSymbols.setShortMonths(['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']);
-		oSymbols.setShortWeekdays(['Sun','Mon','Tue','Wed','Thu','Fri','Sat']);
-		oSymbols.setWeekdays(['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']);
-		oDf.setDateFormatSymbols(oSymbols);
-		alert(oDf.format(new Date()));
+	var oDf = new JsSimpleDateFormat("MMM d, yyyy");
+	var oSymbols = new JsDateFormatSymbols();
+	oSymbols.setAmPmStrings(['AM','PM']);
+	oSymbols.setEras(['AD','BC']);
+	oSymbols.setMonths(['January','February','March','April','May','June','July','August','September','October','November','December']);
+	oSymbols.setShortMonths(['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']);
+	oSymbols.setShortWeekdays(['Sun','Mon','Tue','Wed','Thu','Fri','Sat']);
+	oSymbols.setWeekdays(['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']);
+	oDf.setDateFormatSymbols(oSymbols);
+	alert(oDf.format(new Date()));
 	</pre>
 <p>Of course, you should change the words in the example above to be the
 appropriate words according to your language.<br/>
@@ -919,14 +919,14 @@ It should be two letters as specified in
 but you may choose what you like. Nevermind if for your own. Create a JavaScript file and
 write the code like the below one inside this JavaScript file.</p>
 	<pre>
-		JsDateFormatSymbols.__symbols__.xx = {
-			amPmStrings: ['AM','PM'],
-			eras: ['AD','BC'],
-			months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
-			shortMonths: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-			shortWeekdays: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
-			weekdays: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
-		};
+	JsDateFormatSymbols.__symbols__.xx = {
+		amPmStrings: ['AM','PM'],
+		eras: ['AD','BC'],
+		months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+		shortMonths: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+		shortWeekdays: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+		weekdays: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+	};
 	</pre>
 <p>Alter the words in the example above to be the appropriate words
 according to your language. Insert that JavaScript file in your HTML
