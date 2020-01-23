@@ -1,7 +1,8 @@
 <div style="text-align: justify;">
+
 <h2 style='display:inline'>JsSimpleDateFormat</h2>
 
-<h6 style='display:inline'>&nbsp;&nbsp;v2.1</h6><br>
+<h6 style='display:inline'>&nbsp;&nbsp;v2.1</h6>
 
 <h6 style='margin-top:0px'>Author: AT Mulyana&nbsp;&nbsp; &nbsp;&nbsp;
 &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; Last edited: 15 January 2020</h6>
