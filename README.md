@@ -2,7 +2,7 @@
 <h2 style='display:inline'>JsSimpleDateFormat</h2>
 <h6 style='display:inline'>&nbsp;&nbsp;v2.1</h6>
 <h6 style='margin-top:0px'>Author: AT Mulyana&nbsp;&nbsp; &nbsp;&nbsp;
-&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; Last edited: 15 January 2020</h6>
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; Last edited: 23 January 2020</h6>
 <h3>Table of Contents</h3>
 <ul>
   <li><a href="#Description">Description</a></li>
@@ -1011,7 +1011,7 @@ document after inserting JsSimpleDateFormat.js.</p>
   </li>
 </ul>
 
-<h3><a name="#Used_as_Nodejs_Module">Used as Node.js Module</a></h3>
+<h3><a name="Used_as_Nodejs_Module">Used as Node.js Module</a></h3>
 To install JsSimpleDateFormat package, you can use console command:
 <pre>
 npm install jssimpledateformat
