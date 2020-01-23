@@ -546,8 +546,8 @@ differences and new pattern letters.
       </td>
       <td>
         One letter is the tenths of a second.<br/>
-		Two letters is the hundredths of a second.<br/>
-		Three or more letters is the milliseconds.
+	Two letters is the hundredths of a second.<br/>
+	Three or more letters is the milliseconds.
       </td>
     </tr>
     <tr>
@@ -580,10 +580,10 @@ differences and new pattern letters.
       </td>
       <td>
         For formatting, it's like <a href="#letter_z">z</a> letter in Java version.<br/>
-		For parsing, beside accepted format in Java version,<br/>
-		one letter accepts format: "+7" and "+07"<br/>
-		two letters accepts format: "+07"<br/>
-		three or more letters accepts format: "+07:00"
+	For parsing, beside accepted format in Java version,<br/>
+	one letter accepts format: "+7" and "+07"<br/>
+	two letters accepts format: "+07"<br/>
+	three or more letters accepts format: "+07:00"
       </td>
     </tr>
   </tbody>
@@ -600,8 +600,7 @@ differences and new pattern letters.
 	  is English. If you want to change the default pattern, you may create your
 	  own class which inherits <code>JsSimpleDateFormat</code> and then overwrite
 	  <code>_getDefaultPattern</code> method, like the below one. Suppose the
-	  default pattern you want is <nobr>"MMM dd, yyyy HH:mm a"</nobr>:
-	  
+	  default pattern you want is <nobr>"MMM dd, yyyy HH:mm a"</nobr>:	  
 	  <pre>
 		function MyJsSimpleDateFormat() {
 			JsSimpleDateFormat.apply(this,arguments);
@@ -611,11 +610,9 @@ differences and new pattern letters.
 			return "MMM dd, yyyy HH:mm a";
 		}
 		});
-	  </pre>
-	  
+	  </pre>	  
 	  <p><code>__extends__</code> method is written in JsSimpleDateFormat.js.
 	  If using usual way, we write like this:</p>
-	  
 	  <pre>
 		function MyJsSimpleDateFormat() {
 			JsSimpleDateFormat.apply(this,arguments);
@@ -762,7 +759,6 @@ differences and new pattern letters.
 	  create your own class inherited from <code>JsSimpleDateFormat</code>
 	  and overwrite <code>_getInitDate</code> method as below (suppose you want
 	  the iniatial date time is the current date time):<br/>
-	  
 	  <pre>
 		function MyJsSimpleDateFormat() {
 			JsSimpleDateFormat.apply(this,arguments);
@@ -773,10 +769,8 @@ differences and new pattern letters.
 		}
 		});
 	  </pre>
-	  
 	  <p><code>__extends__</code> method is written in JsSimpleDateFormat.js.
 	  If using usual way, we write like this:</p>
-	  
 	  <pre>
 		function MyJsSimpleDateFormat() {
 			JsSimpleDateFormat.apply(this,arguments);
@@ -786,13 +780,11 @@ differences and new pattern letters.
 			return new Date();
 		}
 	  </pre>
-	  
 	  <p>This method will return <code>null</code> if the string cannot be parsed
 	  to be a valid date time. Note, the method may not use the entire text, only
 	  a substring positioned at index 0. For example, "Jan 3, 2008 is Thursday"
 	  will be parsed successfully using pattern "MMM d, yyyy" even if the
 	  remaining string " is Thursday" doesn't match the pattern.</p>
-	  
 	  <b>Parameters:</b>
 	  <ul>
 		<li><code>s</code> is a string to be parsed.
@@ -814,14 +806,12 @@ differences and new pattern letters.
 	  if the parsing failed. It notes the index when the error begins to happen.
 	  If an error occurs, the <code>index</code> property will not be updated but the
 	  <code>errorIndex</code> property will be updated. Example:
-	  
 	  <pre>
 		var oDf = new JsSimpleDateFormat("MMM d, yyyy");
 		var s = "The date of Jan 3, 2008 is Thursday";
 		var oPos = {index: 12, errorIndex: -1};
 		var oDate = oDf.parse(s, oPos);
 	  </pre>
-	  
 	  <p>After parsing, <code>index</code> property will be updated become 23.
 	  As example above, initiate the value of <code>errorIndex</code> property
 	  to -1 because if an error occurs, it will be updated to the non negative
@@ -832,11 +822,9 @@ differences and new pattern letters.
 	  <br/>
 	  If you don't need the return back about index but only want to determine the
 	  starting index, you may do it like this:</p>
-	  
 	  <pre>
 		var oDate = oDf.parse(s, {index:3});
 	  </pre>
-	  
 	  <p>For further information, see another <a href="#method_parse"><code>parse</code></a>
 	  method.</p>
 	  <b>Parameters:</b>
@@ -919,7 +907,6 @@ Below is an example how to change the keywords:
 		oDf.setDateFormatSymbols(oSymbols);
 		alert(oDf.format(new Date()));
 	</pre>
-
 <p>Of course, you should change the words in the example above to be the
 appropriate words according to your language.<br/>
 <br/>
@@ -931,7 +918,6 @@ It should be two letters as specified in
 <a href="http://www.loc.gov/standards/iso639-2/php/English_list.php">http://www.loc.gov/standards/iso639-2/php/English_list.php</a>,
 but you may choose what you like. Nevermind if for your own. Create a JavaScript file and
 write the code like the below one inside this JavaScript file.</p>
-
 	<pre>
 		JsDateFormatSymbols.__symbols__.xx = {
 			amPmStrings: ['AM','PM'],
@@ -942,7 +928,6 @@ write the code like the below one inside this JavaScript file.</p>
 			weekdays: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
 		};
 	</pre>
-
 <p>Alter the words in the example above to be the appropriate words
 according to your language. Insert that JavaScript file in your HTML
 document after inserting JsSimpleDateFormat.js.</p>
