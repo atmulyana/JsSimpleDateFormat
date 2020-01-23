@@ -9,7 +9,7 @@
   <li><a href="#Date_and_Time_Patterns">Date and Time Patterns</a></li>
   <li><a href="#Class_JsSimpleDateFormat">Class <code>JsSimpleDateFormat</code></a></li>
   <li><a href="#Class_JsDateFormatSymbols">Class <code>JsDateFormatSymbols</code></a></li>
-  <!--<li><a href="#Used_as_Nodejs_Module">Used as Node.js Module</a></li>-->
+  <li><a href="#Used_as_Nodejs_Module">Used as Node.js Module</a></li>
 </ul>
 
 <h3><a name="Description">Description</a></h3>
@@ -1011,6 +1011,16 @@ document after inserting JsSimpleDateFormat.js.</p>
   </li>
 </ul>
 
-<!--<h3><a name="#Used_as_Nodejs_Module">Used as Node.js Module</a></h3>-->
+<h3><a name="#Used_as_Nodejs_Module">Used as Node.js Module</a></h3>
+To install JsSimpleDateFormat package, you can use console command:
+<pre>
+npm install jssimpledateformat
+</pre>
+In javascript source, you can follow the example below:
+<pre>
+import DateFormat, {JsDateFormatSymbols} from 'jssimpledateformat';
 
+let df = new DateFormat('d MMM yyyy HH:mm:ss', new JsDateFormatSymbols('en'));
+console.log(df.format(new Date()));
+</pre>
 </div>
