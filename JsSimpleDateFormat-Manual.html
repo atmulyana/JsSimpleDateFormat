@@ -7,12 +7,15 @@
 head, body, table {
 font-size: large;
 }
-small {
-font-size: medium;
+body {
+margin: 1cm;
 }
 code, pre {
 font-family: monospace;
 font-size: 1rem;
+}
+pre {
+background-color: #eee;
 }
 h3 {
 font-size: 1.25rem;
@@ -23,6 +26,9 @@ font-weight: 900;
 }
 h4 {
 font-size: 1.125rem;
+}
+h6 {
+font-size: 0.8rem;
 }
 li {
 margin-top: 5px;
@@ -36,19 +42,17 @@ vertical-align: top;
 </head>
 <body>
 <div style="text-align: justify;">
-<h2>JsSimpleDateFormat&nbsp;&nbsp; <small>v2.1</small><br>
-<small><small><small>Author: AT Mulyana&nbsp;&nbsp; &nbsp;&nbsp;
-&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; Last edited: 15 January 2020<br>
-</small></small></small></h2>
-<h4><br>
-</h4>
+<h2 style='display:inline'>JsSimpleDateFormat</h2>
+<h6 style='display:inline'>&nbsp;&nbsp;v2.1</h6>
+<h6 style='margin-top:0px'>Author: AT Mulyana&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; Last edited: 23 January 2020</h6>
 <h3>Table of Contents</h3>
 <ul>
   <li><a href="#Description">Description</a></li>
   <li><a href="#Date_and_Time_Patterns">Date and Time Patterns</a></li>
   <li><a href="#Class_JsSimpleDateFormat">Class <code>JsSimpleDateFormat</code></a></li>
   <li><a href="#Class_JsDateFormatSymbols">Class <code>JsDateFormatSymbols</code></a></li>
-  <!--<li><a href="#Used_as_Nodejs_Module">Used as Node.js Module</a></li>-->
+  <li><a href="#Used_as_Nodejs_Module">Used as Node.js Module</a></li>
 </ul>
 
 <h3><a name="Description">Description</a></h3>
@@ -456,12 +460,10 @@ The list of the pattern letters:
 	 NOTE: year 0 means 1 BC, year -1 means 2 BC and so on. So if you set year to 0
 	 then it will be shown as 1, -1 will be shown as 2 and so on. Perhaps, it's better
 	 to show era designator field.
-	 
      <p>For parsing, if the number of pattern letters is more than 2,
      the year is interpreted literally, regardless of the number of
      digits. So using the pattern "MM/dd/yyyy", "01/11/12" parses to
-     Jan 11, 12 A.D.
-	 </p>
+     Jan 11, 12 A.D.</p>
      <p>For parsing with the abbreviated year pattern ("y" or "yy"),
      <code>JsSimpleDateFormat</code> must interpret the abbreviated year
      relative to some century. The begin of century is set by 
@@ -587,8 +589,8 @@ differences and new pattern letters.
       </td>
       <td>
         One letter is the tenths of a second.<br/>
-		Two letters is the hundredths of a second.<br/>
-		Three or more letters is the milliseconds.
+	Two letters is the hundredths of a second.<br/>
+	Three or more letters is the milliseconds.
       </td>
     </tr>
     <tr>
@@ -621,10 +623,10 @@ differences and new pattern letters.
       </td>
       <td>
         For formatting, it's like <a href="#letter_z">z</a> letter in Java version.<br/>
-		For parsing, beside accepted format in Java version,<br/>
-		one letter accepts format: "+7" and "+07"<br/>
-		two letters accepts format: "+07"<br/>
-		three or more letters accepts format: "+07:00"
+	For parsing, beside accepted format in Java version,<br/>
+	one letter accepts format: "+7" and "+07"<br/>
+	two letters accepts format: "+07"<br/>
+	three or more letters accepts format: "+07:00"
       </td>
     </tr>
   </tbody>
@@ -641,30 +643,27 @@ differences and new pattern letters.
 	  is English. If you want to change the default pattern, you may create your
 	  own class which inherits <code>JsSimpleDateFormat</code> and then overwrite
 	  <code>_getDefaultPattern</code> method, like the below one. Suppose the
-	  default pattern you want is <nobr>"MMM dd, yyyy HH:mm a"</nobr>:
-	  
+	  default pattern you want is <nobr>"MMM dd, yyyy HH:mm a"</nobr>:	  
 	  <pre>
-		function MyJsSimpleDateFormat() {
-			JsSimpleDateFormat.apply(this,arguments);
-		}
-		MyJsSimpleDateFormat.__extends__(JsSimpleDateFormat, {
-		_getDefaultPattern: function() {
-			return "MMM dd, yyyy HH:mm a";
-		}
-		});
-	  </pre>
-	  
+	function MyJsSimpleDateFormat() {
+		JsSimpleDateFormat.apply(this,arguments);
+	}
+	MyJsSimpleDateFormat.__extends__(JsSimpleDateFormat, {
+	_getDefaultPattern: function() {
+		return "MMM dd, yyyy HH:mm a";
+	}
+	});
+	  </pre>	  
 	  <p><code>__extends__</code> method is written in JsSimpleDateFormat.js.
 	  If using usual way, we write like this:</p>
-	  
 	  <pre>
-		function MyJsSimpleDateFormat() {
-			JsSimpleDateFormat.apply(this,arguments);
-		}
-		MyJsSimpleDateFormat.prototype = new JsSimpleDateFormat();
-		MyJsSimpleDateFormat.prototype._getDefaultPattern = function() {
-			return "MMM dd, yyyy HH:mm a";
-		}
+	function MyJsSimpleDateFormat() {
+		JsSimpleDateFormat.apply(this,arguments);
+	}
+	MyJsSimpleDateFormat.prototype = new JsSimpleDateFormat();
+	MyJsSimpleDateFormat.prototype._getDefaultPattern = function() {
+		return "MMM dd, yyyy HH:mm a";
+	}
 	  </pre>
   </li>
   <li><a name="contructor2"><code>JsSimpleDateFormat(sPattern)</code></a><br/>
@@ -803,37 +802,32 @@ differences and new pattern letters.
 	  create your own class inherited from <code>JsSimpleDateFormat</code>
 	  and overwrite <code>_getInitDate</code> method as below (suppose you want
 	  the iniatial date time is the current date time):<br/>
-	  
 	  <pre>
-		function MyJsSimpleDateFormat() {
-			JsSimpleDateFormat.apply(this,arguments);
-		}
-		MyJsSimpleDateFormat.__extends__(JsSimpleDateFormat, {
-		_getInitDate: function() {
-			return new Date();
-		}
-		});
+	function MyJsSimpleDateFormat() {
+		JsSimpleDateFormat.apply(this,arguments);
+	}
+	MyJsSimpleDateFormat.__extends__(JsSimpleDateFormat, {
+	_getInitDate: function() {
+		return new Date();
+	}
+	});
 	  </pre>
-	  
 	  <p><code>__extends__</code> method is written in JsSimpleDateFormat.js.
 	  If using usual way, we write like this:</p>
-	  
 	  <pre>
-		function MyJsSimpleDateFormat() {
-			JsSimpleDateFormat.apply(this,arguments);
-		}
-		MyJsSimpleDateFormat.prototype = new JsSimpleDateFormat();
-		MyJsSimpleDateFormat.prototype._getInitDate = function() {
-			return new Date();
-		}
+	function MyJsSimpleDateFormat() {
+		JsSimpleDateFormat.apply(this,arguments);
+	}
+	MyJsSimpleDateFormat.prototype = new JsSimpleDateFormat();
+	MyJsSimpleDateFormat.prototype._getInitDate = function() {
+		return new Date();
+	}
 	  </pre>
-	  
 	  <p>This method will return <code>null</code> if the string cannot be parsed
 	  to be a valid date time. Note, the method may not use the entire text, only
 	  a substring positioned at index 0. For example, "Jan 3, 2008 is Thursday"
 	  will be parsed successfully using pattern "MMM d, yyyy" even if the
 	  remaining string " is Thursday" doesn't match the pattern.</p>
-	  
 	  <b>Parameters:</b>
 	  <ul>
 		<li><code>s</code> is a string to be parsed.
@@ -855,14 +849,12 @@ differences and new pattern letters.
 	  if the parsing failed. It notes the index when the error begins to happen.
 	  If an error occurs, the <code>index</code> property will not be updated but the
 	  <code>errorIndex</code> property will be updated. Example:
-	  
 	  <pre>
-		var oDf = new JsSimpleDateFormat("MMM d, yyyy");
-		var s = "The date of Jan 3, 2008 is Thursday";
-		var oPos = {index: 12, errorIndex: -1};
-		var oDate = oDf.parse(s, oPos);
+	var oDf = new JsSimpleDateFormat("MMM d, yyyy");
+	var s = "The date of Jan 3, 2008 is Thursday";
+	var oPos = {index: 12, errorIndex: -1};
+	var oDate = oDf.parse(s, oPos);
 	  </pre>
-	  
 	  <p>After parsing, <code>index</code> property will be updated become 23.
 	  As example above, initiate the value of <code>errorIndex</code> property
 	  to -1 because if an error occurs, it will be updated to the non negative
@@ -873,11 +865,9 @@ differences and new pattern letters.
 	  <br/>
 	  If you don't need the return back about index but only want to determine the
 	  starting index, you may do it like this:</p>
-	  
 	  <pre>
-		var oDate = oDf.parse(s, {index:3});
+	var oDate = oDf.parse(s, {index:3});
 	  </pre>
-	  
 	  <p>For further information, see another <a href="#method_parse"><code>parse</code></a>
 	  method.</p>
 	  <b>Parameters:</b>
@@ -949,18 +939,17 @@ words, you can set the new keywords according to your languange.<br/>
 <br/>
 Below is an example how to change the keywords:
 	<pre>
-		var oDf = new JsSimpleDateFormat("MMM d, yyyy");
-		var oSymbols = new JsDateFormatSymbols();
-		oSymbols.setAmPmStrings(['AM','PM']);
-		oSymbols.setEras(['AD','BC']);
-		oSymbols.setMonths(['January','February','March','April','May','June','July','August','September','October','November','December']);
-		oSymbols.setShortMonths(['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']);
-		oSymbols.setShortWeekdays(['Sun','Mon','Tue','Wed','Thu','Fri','Sat']);
-		oSymbols.setWeekdays(['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']);
-		oDf.setDateFormatSymbols(oSymbols);
-		alert(oDf.format(new Date()));
+	var oDf = new JsSimpleDateFormat("MMM d, yyyy");
+	var oSymbols = new JsDateFormatSymbols();
+	oSymbols.setAmPmStrings(['AM','PM']);
+	oSymbols.setEras(['AD','BC']);
+	oSymbols.setMonths(['January','February','March','April','May','June','July','August','September','October','November','December']);
+	oSymbols.setShortMonths(['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']);
+	oSymbols.setShortWeekdays(['Sun','Mon','Tue','Wed','Thu','Fri','Sat']);
+	oSymbols.setWeekdays(['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']);
+	oDf.setDateFormatSymbols(oSymbols);
+	alert(oDf.format(new Date()));
 	</pre>
-
 <p>Of course, you should change the words in the example above to be the
 appropriate words according to your language.<br/>
 <br/>
@@ -972,18 +961,16 @@ It should be two letters as specified in
 <a href="http://www.loc.gov/standards/iso639-2/php/English_list.php">http://www.loc.gov/standards/iso639-2/php/English_list.php</a>,
 but you may choose what you like. Nevermind if for your own. Create a JavaScript file and
 write the code like the below one inside this JavaScript file.</p>
-
 	<pre>
-		JsDateFormatSymbols.__symbols__.xx = {
-			amPmStrings: ['AM','PM'],
-			eras: ['AD','BC'],
-			months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
-			shortMonths: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-			shortWeekdays: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
-			weekdays: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
-		};
+	JsDateFormatSymbols.__symbols__.xx = {
+		amPmStrings: ['AM','PM'],
+		eras: ['AD','BC'],
+		months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+		shortMonths: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+		shortWeekdays: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+		weekdays: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+	};
 	</pre>
-
 <p>Alter the words in the example above to be the appropriate words
 according to your language. Insert that JavaScript file in your HTML
 document after inserting JsSimpleDateFormat.js.</p>
@@ -1067,8 +1054,18 @@ document after inserting JsSimpleDateFormat.js.</p>
   </li>
 </ul>
 
-<!--<h3><a name="#Used_as_Nodejs_Module">Used as Node.js Module</a></h3>-->
+<h3><a name="Used_as_Nodejs_Module">Used as Node.js Module</a></h3>
+To install JsSimpleDateFormat package, you can use console command:
+<pre>
+npm install jssimpledateformat
+</pre>
+In javascript source, you can follow the example below:
+<pre>
+import DateFormat, {JsDateFormatSymbols} from 'jssimpledateformat';
 
+let df = new DateFormat('d MMM yyyy HH:mm:ss', new JsDateFormatSymbols('en'));
+console.log(df.format(new Date()));
+</pre>
 </div>
 </body>
 </html>
