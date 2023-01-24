@@ -3,6 +3,8 @@
 <head>
 	<title>JsSimpleDateFormat Demo</title>
 	<script src="JsSimpleDateFormat.min.js"></script>
+	<script src="NetDateTimeFormat.min.js"></script>
+	<script src="TimerFormat.min.js"></script>
 	<script>
 	String.prototype.trim = function() {
 		return this.toString().replace(/^\s+/,"").replace(/\s+$/,"");
@@ -23,6 +25,24 @@
 			e.returnValue = false;
 			e.cancelBubble = true;
 		}
+	}
+
+	function prepareFormat() {
+		var sType = document.getElementById("rdoNetFormat").checked    ? 'net' :
+		            document.getElementById("rdoTimerFormat").checked  ? 'timer' :
+		                                                                 'java';
+		var arOptions = document.getElementById("format2").getElementsByTagName("OPTION");
+		var sValue = '';
+		for (var i = 0; i < arOptions.length; i++) {
+			if (arOptions[i].getAttribute("type").indexOf(sType) >= 0) {
+				arOptions[i].style.removeProperty('display');
+				if (!sValue) sValue = arOptions[i].value;
+			}
+			else {
+				arOptions[i].style.display = 'none';
+			}
+		}
+		document.getElementById("format2").value = sValue;
 	}
 	
 	function prepareDay() {
@@ -49,61 +69,74 @@
 		document.getElementById("year").value = now.getFullYear();
 		document.getElementById("month").value = now.getMonth() + 1;
 		document.getElementById("day").value = now.getDate();
-		document.getElementById("hour").value = ("00" + now.getHours()).substr(-2);
-		document.getElementById("minute").value = ("00" + now.getMinutes()).substr(-2);
-		document.getElementById("second").value = ("00" + now.getSeconds()).substr(-2);
-		document.getElementById("ms").value = ("000" + now.getMilliseconds()).substr(-3);
-		
+		document.getElementById("hour").value = ("00" + now.getHours()).slice(-2);
+		document.getElementById("minute").value = ("00" + now.getMinutes()).slice(-2);
+		document.getElementById("second").value = ("00" + now.getSeconds()).slice(-2);
+		document.getElementById("ms").value = ("000" + now.getMilliseconds()).slice(-3);
 	}
 	
 	function showFormattedTime() {
-		var oDt = new Date();
+		var oDt = new Date(),
+		    isNet = document.getElementById("rdoNetFormat").checked,
+		    isTimer = document.getElementById('rdoTimerFormat').checked;
+		
 		var i = parseInt(document.getElementById("year").value.trim(),10);
-		if (!isNaN(i)) oDt.setFullYear(i);
-		document.getElementById("year").value = oDt.getFullYear();
+		if (!isNaN(i)) oDt[isTimer ? 'setUTCFullYear' : 'setFullYear'](i);
+		document.getElementById("year").value = oDt[isTimer ? 'getUTCFullYear' : 'getFullYear']();
 		
 		i = parseInt(document.getElementById("month").value.trim(),10);
-		oDt.setDate(1);
-		oDt.setMonth(isNaN(i) ? 0 : i-1);
-		document.getElementById("month").value = oDt.getMonth()+1;
+		oDt[isTimer ? 'setUTCDate' : 'setDate'](1);
+		oDt[isTimer ? 'setUTCMonth' : 'setMonth'](isNaN(i) ? 0 : i-1);
+		document.getElementById("month").value = oDt[isTimer ? 'getUTCMonth' : 'getMonth']()+1;
 		
 		i = parseInt(document.getElementById("day").value.trim(),10);
-		oDt.setDate(isNaN(i) ? 0 : i);
-		document.getElementById("day").value = oDt.getDate();
+		oDt[isTimer ? 'setUTCDate' : 'setDate'](isNaN(i) ? 0 : i);
+		document.getElementById("day").value = oDt[isTimer ? 'getUTCDate' : 'getDate']();
 		
 		i = parseInt(document.getElementById("hour").value.trim(),10);
-		oDt.setHours(isNaN(i) ? 0 : i);
-		document.getElementById("hour").value = ("00" + oDt.getHours()).substr(-2);
+		oDt[isTimer ? 'setUTCHours' : 'setHours'](isNaN(i) ? 0 : i);
+		document.getElementById("hour").value = ("00" + oDt[isTimer ? 'getUTCHours' : 'getHours']()).substr(-2);
 		
 		i = parseInt(document.getElementById("minute").value.trim(),10);
-		oDt.setMinutes(isNaN(i) ? 0 : i);
-		document.getElementById("minute").value = ("00" + oDt.getMinutes()).substr(-2);
+		oDt[isTimer ? 'setUTCMinutes' : 'setMinutes'](isNaN(i) ? 0 : i);
+		document.getElementById("minute").value = ("00" + oDt[isTimer ? 'getUTCMinutes' : 'getMinutes']()).substr(-2);
 		
 		i = parseInt(document.getElementById("second").value.trim(),10);
-		oDt.setSeconds(isNaN(i) ? 0 : i);
-		document.getElementById("second").value = ("00" + oDt.getSeconds()).substr(-2);
+		oDt[isTimer ? 'setUTCSeconds' : 'setSeconds'](isNaN(i) ? 0 : i);
+		document.getElementById("second").value = ("00" + oDt[isTimer ? 'getUTCSeconds' : 'getSeconds']()).substr(-2);
 		
 		i = parseInt(document.getElementById("ms").value.trim(),10);
-		oDt.setMilliseconds(isNaN(i) ? 0 : i);
-		document.getElementById("ms").value = ("000" + oDt.getMilliseconds()).substr(-3);
-		
+		oDt[isTimer ? 'setUTCMilliseconds' : 'setMilliseconds'](isNaN(i) ? 0 : i);
+		document.getElementById("ms").value = ("000" + oDt[isTimer ? 'getUTCMilliseconds' : 'getMilliseconds']()).substr(-3);
+
 		var sPattern = document.getElementById("format1").value.trim();
 		if (sPattern == "") sPattern = document.getElementById("format2").value.trim();
-		//var oDf = new JsSimpleDateFormat();
-		//var oDf = new JsSimpleDateFormat(sPattern);
-		//var oDf = new JsSimpleDateFormat(sPattern, new JsDateFormatSymbols(document.getElementById("locale").value));
-		var oDf = new JsSimpleDateFormat(sPattern,document.getElementById("locale").value, document.getElementById("chkNetCompat").checked);
-		document.getElementById("formattedTime").value = oDf.format(oDt);
-		//alert(oDt.getTime());
+		var sLocale = document.getElementById("locale").value;
+		if (isTimer && sPattern == "APPROX") {
+			var oDf = new TimerFormat(sPattern, sLocale);
+			document.getElementById("formattedTime").value = oDf.approxFormat(oDt)
+		}
+		else {
+			//var oDf = new JsSimpleDateFormat();
+			//var oDf = new JsSimpleDateFormat(sPattern);
+			//var oDf = new JsSimpleDateFormat(sPattern, new JsDateFormatSymbols(document.getElementById("locale").value));
+			var oDf = isNet   ? new NetDateTimeFormat(sPattern, sLocale) :
+					  isTimer ? new TimerFormat(sPattern) :
+								new JsSimpleDateFormat(sPattern, sLocale);
+			document.getElementById("formattedTime").value = oDf.format(oDt);
+		}
 	}
 	
 	function showParsedTime() {
 		var sPattern = document.getElementById("format1").value.trim();
 		if (sPattern == "") sPattern = document.getElementById("format2").value.trim();
+		var sLocale = document.getElementById("locale").value;
 		//var oDf = new JsSimpleDateFormat(sPattern);
 		//var oDf = new JsSimpleDateFormat(sPattern, new JsDateFormatSymbols(document.getElementById("locale").value));
-		var oDf = new JsSimpleDateFormat(sPattern,document.getElementById("locale").value, document.getElementById("chkNetCompat").checked);
-		//var oDf = new MyJsSimpleDateFormat(sPattern,document.getElementById("locale").value, document.getElementById("chkNetCompat").checked);
+		var oDf = document.getElementById("rdoNetFormat").checked   ? new NetDateTimeFormat(sPattern, sLocale) :
+		          document.getElementById("rdoTimerFormat").checked ? new TimerFormat(sPattern) :
+		                                                              new JsSimpleDateFormat(sPattern, sLocale);
+		//var oDf = new MyJsSimpleDateFormat(sPattern, document.getElementById("locale").value);
 		var sStartYear = document.getElementById("startYear").value.trim();
 		if (sStartYear != "") {
 			var oStartDate = new Date();
@@ -115,18 +148,23 @@
 		
 		var oPos = {index: parseInt(document.getElementById("startIndex").value), errorIndex: -1};
 		var oDate = oDf.parse(document.getElementById("parseText").value, oPos);
-		//var oDate = oDf.parse(document.getElementById("parseText").value);
-		//var oDate = oDf.parse(document.getElementById("parseText").value, {index:3});
-		document.getElementById("parsedTime").value = oDate ? oDate+"   ("
-			+(new JsSimpleDateFormat("EEE, yyyy-MM-dd HH:mm:ss.SSS G 'w'[w] 'W'[W] 'D'[D] 'F'[F]").format(oDate))
-			+")"
-			: "null";
+
+		if (document.getElementById('rdoTimerFormat').checked) {
+			document.getElementById("parsedTime").value = !oDate ? 'null'
+				: oDate+"   (" + new TimerFormat('d "days" hh:mm:ss.fff').format(oDate) + ")";
+		}
+		else {
+			document.getElementById("parsedTime").value = oDate ? oDate+"   ("
+				+(new JsSimpleDateFormat("EEE, yyyy-MM-dd HH:mm:ss.SSS G 'w'[w] 'W'[W] 'D'[D] 'F'[F]").format(oDate))
+				+")"
+				: "null";
+		}
 		document.getElementById("lastParsedIndex").value = oPos.index;
 		document.getElementById("errorParsedIndex").value = oPos.errorIndex;
 	}
 	
 	function MyJsSimpleDateFormat() {
-		JsSimpleDateFormat.apply(this,arguments);
+		JsSimpleDateFormat.apply(this, arguments);
 	}
 	MyJsSimpleDateFormat.__extends__(JsSimpleDateFormat, {
 	_getDefaultPattern: function() {
@@ -138,47 +176,51 @@
 	});
 	</script>
 </head>
-<body style="margin:5px" onload="setCurrentDateTime(); prepareDay()">
+<body style="margin:5px" onload="setCurrentDateTime(); prepareDay(); prepareFormat()">
 <h2>JsSimpleDateFormat Demo</h2>
 <p>Please type the date time format here: <input id="format1" type="text" size="40" /><br/>
 or if you are not sure, please select the format here:
 <select id="format2" onchange="document.getElementById('format1').value=''">
-	<!--
-	<option value="M/d/yyyy hh:mm:ss a">M/d/yyyy hh:mm:ss a</option>
-	<option value="M/d/yyyy hh:mm:ss t">M/d/yyyy hh:mm:ss t</option>
-	<option value="MMMM d, yyyy G K:m:s a">MMMM d, yyyy G K:m:s a</option>
-	<option value="MMMM d, YYYY g h:m:s tt">MMMM d, YYYY g h:m:s tt</option>
-	<option value="EEE, MMM d, yy k:m:s">EEE, MMM d, yy k:m:s</option>
-	<option value="MMMM d, y HH:mm:ss z">MMMM d, y HH:mm:ss z</option>
-	<option value="MMMM dd, yy HH:mm:ss.f zz">MMMM dd, yy HH:mm:ss.f zz</option>
-	<option value="MMMM ddd, yyy HH:mm:ss.ff zzz">MMMM ddd, yyy HH:mm:ss.ff zzz</option>
-	<option value="MMMM dddd, yyyy HH:mm:ss.fff Z">MMMM dddd, yyyy HH:mm:ss.fff Z</option>
-	<option value="yyyy-MM-dd HH:mm:ss.SSS X">yyyy-MM-dd HH:mm:ss.SSS X</option>
-	<option value="yyyy-MM-dd HH:mm:ss.fff XX">yyyy-MM-dd HH:mm:ss.fff XX</option>
-	<option value="yyyyMMdd XXX">yyyyMMdd XXX</option>
-	<option value="'at' k o''cloc'k' on EEEE">'at' k o''cloc'k' on EEEE</option>
-	<option value="W'(st/nd/rd/th) week in this month'">W'(st/nd/rd/th) week in this month'</option>
-	<option value="w'(st/nd/rd/th) week in this year'">w'(st/nd/rd/th) week in this year'</option>
-	<option value="'DDD': DDD, 'FFF': FFF">'DDD': DDD, 'FFF': FFF</option>
-	-->
-	<option>M/d/yyyy hh:mm:ss a</option>
-	<option>M/d/yyyy hh:mm:ss t</option>
-	<option>MMMM d, yyyy G K:m:s a</option>
-	<option>MMMM d, YYYY g h:m:s tt</option>
-	<option>EEE, MMM d, yy k:m:s</option>
-	<option>MMMM d, y HH:mm:ss z</option>
-	<option>MMMM dd, yy HH:mm:ss.f zz</option>
-	<option>MMMM ddd, yyy HH:mm:ss.ff zzz</option>
-	<option>MMMM dddd, yyyy HH:mm:ss.fff Z</option>
-	<option>yyyy-MM-dd HH:mm:ss.SSS X</option>
-	<option>yyyy-MM-dd HH:mm:ss.fff XX</option>
-	<option>yyyyMMdd XXX</option>
-	<option>'at' k o''cloc'k' on EEEE</option>
-	<option>W'(st/nd/rd/th) week in this month'</option>
-	<option>w'(st/nd/rd/th) week in this year'</option>
-	<option>'DDD': DDD, 'FFF': FFF</option>
+	<option type="java">M/d/yyyy hh:mm:ss aa</option>
+	<option type="net">M/d/yyyy hh:mm:ss tt</option>
+	<option type="java">MMMM d, YYYY G K:m:s a</option>
+	<option type="net">MMMM d, yyyy g h:m:s t</option>
+	<option type="java">EEE, MMM d, yy k:m:s</option>
+	<option type="net">ddd, MMM d, yy H:m:s</option>
+	<option type="java,net">MMMM d, y HH:mm:ss z</option>
+	<option type="java">MMMM dd, yy HH:mm:ss.SSS zz</option>
+	<option type="net">MMMM dd, yy HH:mm:ss.f zz</option>
+	<option type="net">MMMM dd, yy HH:mm:ss.F zz</option>
+	<option type="java">MMMM ddd, yyy HH:mm:ss.SSS zzz</option>
+	<option type="net">MMMM d, yyy HH:mm:ss.ff zzz</option>
+	<option type="net">MMMM d, yyy HH:mm:ss.FF zzz</option>
+	<option type="java">MMMM dddd, yyyy HH:mm:ss.SSS Z</option>
+	<option type="net">MMMM d, yyyy HH:mm:ss.fff K</option>
+	<option type="net">MMMM d, yyyy HH:mm:ss.FFF K</option>
+	<option type="java">yyyy-MM-dd HH:mm:ss X</option>
+	<option type="java">yyyy-MM-dd HH:mm:ss XX</option>
+	<option type="java">yyyyMMdd HHmmss XXX</option>
+	<option type="net">yyyyMMdd HHmmss K</option>
+	<option type="java">'at' k o''cloc'k' on EEEE</option>
+	<option type="net">a't' H o\'clock on dddd</option>
+	<option type="net">"He said \"at" h o\'clock on dddd'"'</option>
+	<option type="java">W'(st/nd/rd/th) week in this month'</option>
+	<option type="java">w'(st/nd/rd/th) week in this year'</option>
+	<option type="java">'DDD': DDD, 'FFF': FFF</option>
+	<option type="timer">h:m:s</option>
+	<option type="timer">-hh:mm:ss</option>
+	<option type="timer">d' days 'hh\:mm\:ss.f</option>
+	<option type="timer">d' days 'hh\:mm\:ss.F</option>
+	<option type="timer">dd' days 'hh\:mm\:ss\.ff</option>
+	<option type="timer">dd' days 'hh\:mm\:ss\.FF</option>
+	<option type="timer">ddd' days 'hh\:mm\:ss\.fff</option>
+	<option type="timer">ddd' days 'hh\:mm\:ss\.FFF</option>
 </select>
-<span style="white-space:nowrap"><input id="chkNetCompat" type="checkbox" />Net Compatible</span>
+<span style="white-space:nowrap">
+	Format:
+	<input id="rdoJavaFormat" name="rdoFormat" checked type="radio" value="java" onclick="prepareFormat()" />Java</span>
+	<input id="rdoNetFormat" name="rdoFormat"  type="radio" value="net" onclick="prepareFormat()" />Net</span>
+	<input id="rdoTimerFormat" name="rdoFormat"  type="radio" value="timer" onclick="prepareFormat()" />Timer</span>
 <br/>
 Please select a locale:
 <select id="locale">
@@ -242,7 +284,7 @@ Please select a locale:
 		</select>
 	</td>
 	<td>
-		<input id="year" type="text" maxlength="5" size="6" onkeypress="return; cancelNonNumricKey(arguments[0])" value="" />
+		<input id="year" type="text" maxlength="5" size="6" onkeypress="cancelNonNumricKey(arguments[0])" value="" />
 	</td>
 	<td>&nbsp;</td>
 	<td>
@@ -288,7 +330,7 @@ Last index = <input id="lastParsedIndex" type="text" readonly="1" size="4" /><br
 Error index = <input id="errorParsedIndex" type="text" readonly="1" size="4" /></p>
 
 <p>Some additional parameters you may specify for parsing:<br/>
-The year of the begin of century:
+The year of the begin of century (not for Timer):
 <input id="startYear" type="text" maxlength="4" size="5" onkeypress="cancelNonNumricKey(arguments[0])" value="" />
 (By default, it's 80 years ago)<br/>
 Flexible white spaces?
@@ -297,14 +339,5 @@ Flexible white spaces?
 	<option value="Yes">Yes</option>
 </select>
 </p>
-
-<!-- <hr/>
-<font size=-2>This demo has been tested on:
-<ul>
-	<li>Google Chrome 49</li>
-	<li>Firefox Nightly 47.0a1</li>
-	<li>Microsoft Edge 25</li>
-</ul>
-</font> -->
 </body>
 </html>

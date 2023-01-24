@@ -5,7 +5,8 @@
   <title>JsSimpleDateFormat Manual</title>
   <style>
 head, body, table {
-font-size: large;
+/*font-family: Arial, Helvetica, sans-serif;*/
+font-size: 1.25rem;
 }
 body {
 margin: 1cm;
@@ -18,17 +19,20 @@ pre {
 background-color: #eee;
 }
 h3 {
-font-size: 1.25rem;
+font-size: 1.5rem;
 }
 h3 code {
-font-size: 1.125rem;
+font-size: 1.375rem;
 font-weight: 900;
 }
 h4 {
+font-size: 1.25rem;
+}
+h5 {
 font-size: 1.125rem;
 }
 h6 {
-font-size: 0.8rem;
+font-size: 1rem;
 }
 li {
 margin-top: 5px;
@@ -43,15 +47,16 @@ vertical-align: top;
 <body>
 <div style="text-align: justify;">
 <h2 style='display:inline'>JsSimpleDateFormat</h2>
-<h6 style='display:inline'>&nbsp;&nbsp;v2.1</h6>
-<h6 style='margin-top:0px'>Author: AT Mulyana&nbsp;&nbsp; &nbsp;&nbsp;
-&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; Last edited: 23 January 2020</h6>
+<h6 style='display:inline'>&nbsp;&nbsp;v3.0</h6>
 <h3>Table of Contents</h3>
 <ul>
   <li><a href="#Description">Description</a></li>
   <li><a href="#Date_and_Time_Patterns">Date and Time Patterns</a></li>
   <li><a href="#Class_JsSimpleDateFormat">Class <code>JsSimpleDateFormat</code></a></li>
   <li><a href="#Class_JsDateFormatSymbols">Class <code>JsDateFormatSymbols</code></a></li>
+  <li><a href="#Class_NetDateTimeFormat">Class <code>NetDateTimeFormat</code></a></li>
+  <li><a href="#Class_TimerFormat">Class <code>TimerFormat</code></a></li>
+  <li><a href="#Class_TimerFormatSymbols">Class <code>TimerFormatSymbols</code></a></li>
   <li><a href="#Used_as_Nodejs_Module">Used as Node.js Module</a></li>
 </ul>
 
@@ -62,13 +67,21 @@ a string as the pattern we define and also for parsing a string to be a
 works similar with Java <code>SimpleDateFormat</code> class which uses
 the same pattern letters with similar rules. If you have been familiar
 with Java <code>SimpleDateFormat</code> class, you should be able to
-use <code>JsSimpleDateFormat</code> easily.<br/><br/>
-This library contains two main classes, those are
-<a href="#Class_JsSimpleDateFormat"><code>JsSimpleDateFormat</code></a>
-and <a href="#Class_JsDateFormatSymbols"><code>JsDateFormatSymbols</code></a>.
-<br>
+use <code>JsSimpleDateFormat</code> easily. This library also contains 
+<a href="#Class_JsDateFormatSymbols"><code>JsDateFormatSymbols</code></a> which is like
+Java <code>DateFormatSymbols</code> class to encapsulate the localizable date-time
+components, such as: the name of days, months etc.<br/><br/>
+Beside Java formatting pattern, this library also supports .Net <code>DateTime</code>
+formatting pattern. The .Net pattern is handled by
+<a href="#Class_NetDateTimeFormat"><code>NetDateTimeFormat</code></a> class.<br/><br/>
+This library also supports the formatting for duration. The format pattern is based on
+.Net <code>TimeSpan</code> formatting pattern with some extensions. For this purpose,
+this library provides <a href="#Class_TimerFormat"><code>TimerFormat</code></a> class.
+<a href="#Class_TimerFormatSymbols"><code>TimerFormatSymbols</code></a> class is used 
+to handle the localization for duration.
 
 <h3><a name="Date_and_Time_Patterns">Date and Time Patterns</a></h3>
+<h4><a name="Java_Date_and_Time_Patterns">Java Compatible Date and Time Patterns</a></h4>
 As mentioned above, <code>JsSimpleDateFormat</code> uses the same pattern
 letters with similar rules as used by Java <code>SimpleDateFormat</code>
 class. To make the same comprehension, the explanation about the pattern
@@ -78,15 +91,19 @@ with some modifications to note the difference between <code>JsSimpleDateFormat<
 and Java <code>SimpleDateFormat</code>.
 <br/><br/>
 
-Date and time formats are specified by date and time pattern strings. Within date and
-time pattern strings, unquoted certain letters are interpreted as pattern letters
-representing the components of a date or time string. Text can be quoted using single
-quotes (<code>'</code>) to avoid interpretation. "<code>''</code>" represents a single quote.
+Date and time formats are specified by date and time pattern strings. Within
+date and time pattern strings, unquoted letters from '<code>A</code>' to
+'<code>Z</code>' and from '<code>a</code>' to '<code>z</code>' are interpreted as
+pattern letters representing the components of a date or time string. Text can be
+quoted using single quotes (<code>'</code>) to avoid interpretation. "<code>''</code>"
+represents a single quote. All other characters are not interpreted; they're simply
+copied into the output string during formatting or matched against the input string
+during parsing.
 <br/><br/>
 
 <a name="Note_Differences"><b>Note:</b></a> There is a prominent difference between
-<code>JsSimpleDateFormat</code> and Java <code>SimpleDateFormat</code> class
-besides the specific pattern letter:
+<code>JsSimpleDateFormat</code> and Java <code>SimpleDateFormat</code> class when
+interpreting an unrecognized letter:
 <ul>
 <li>If there is a letter ('<code>a</code>' to '<code>z</code>' or '<code>A</code>'
     to '<code>Z</code>') in the pattern which doesn't have a representation (not listed
@@ -122,7 +139,7 @@ The list of the pattern letters:
     </tr>
     <tr style="background-color: rgb(238, 238, 255);">
       <td>
-        <code>y</code>
+        <a name="letter_y"><code>y</code></a>
       </td>
       <td>
 	    Year
@@ -150,7 +167,7 @@ The list of the pattern letters:
     </tr>
     <tr style="background-color: rgb(238, 238, 255);">
       <td>
-        <code>M</code>
+        <a name="letter_M"><code>M</code></a>
       </td>
       <td>
       Month in year.<br/>
@@ -167,7 +184,7 @@ The list of the pattern letters:
     </tr>
     <tr>
       <td>
-        <code>L</code>
+        <a name="letter_L"><code>L</code></a>
       </td>
       <td>
 	    Month in year (standalone form)
@@ -176,7 +193,7 @@ The list of the pattern letters:
         <a href="#month">Month</a>
       </td>
       <td>
-		<code>7</code>; <code>07</code>; <code>007</code>; <code>0007</code>
+		<code>7</code>; <code>07</code>; <code>Jul</code>; <code>July</code>
       </td>
     </tr>
     <tr style="background-color: rgb(238, 238, 255);">
@@ -223,7 +240,7 @@ The list of the pattern letters:
     </tr>
     <tr>
       <td>
-        <code>d</code>
+        <a name="letter_d"><code>d</code></a>
       </td>
       <td>
 	    Day in month
@@ -293,7 +310,7 @@ The list of the pattern letters:
     </tr>
     <tr style="background-color: rgb(238, 238, 255);">
       <td>
-        <code>H</code>
+        <a name="letter_H"><code>H</code></a>
       </td>
       <td>
 	    Hour in day (0-23)
@@ -335,7 +352,7 @@ The list of the pattern letters:
     </tr>
     <tr>
       <td>
-        <code>h</code>
+        <a name="letter_h"><code>h</code></a>
       </td>
       <td>
 	    Hour in am/pm (1-12)
@@ -349,7 +366,7 @@ The list of the pattern letters:
     </tr>
     <tr style="background-color: rgb(238, 238, 255);">
       <td>
-        <code>m</code>
+        <a name="letter_m"><code>m</code></a>
       </td>
       <td>
 	    Minute in hour
@@ -363,7 +380,7 @@ The list of the pattern letters:
     </tr>
     <tr>
       <td>
-        <code>s</code>
+        <a name="letter_s"><code>s</code></a>
       </td>
       <td>
 	    Second in minute
@@ -408,7 +425,7 @@ The list of the pattern letters:
     </tr>
     <tr style="background-color: rgb(238, 238, 255);">
       <td>
-        <code>Z</code>
+        <a name="letter_Z"><code>Z</code></a>
       </td>
       <td>
 	    Time zone
@@ -422,7 +439,7 @@ The list of the pattern letters:
     </tr>
     <tr>
       <td>
-        <code>X</code>
+        <a name="letter_X"><code>X</code></a>
       </td>
       <td>
 	    Time zone
@@ -453,31 +470,31 @@ The list of the pattern letters:
      For parsing, the number of pattern letters is ignored unless
      it's needed to separate two adjacent fields.
  </li>
- <li><strong><a name="year">Year:</a></strong>
-     For formatting, if the number of pattern letters is 2, the year
-     is truncated to 2 digits; otherwise it is interpreted as a
-     <a href="#number">Number</a>.<br/>
-	 NOTE: year 0 means 1 BC, year -1 means 2 BC and so on. So if you set year to 0
-	 then it will be shown as 1, -1 will be shown as 2 and so on. Perhaps, it's better
-	 to show era designator field.
-     <p>For parsing, if the number of pattern letters is more than 2,
-     the year is interpreted literally, regardless of the number of
-     digits. So using the pattern "MM/dd/yyyy", "01/11/12" parses to
-     Jan 11, 12 A.D.</p>
-     <p>For parsing with the abbreviated year pattern ("y" or "yy"),
-     <code>JsSimpleDateFormat</code> must interpret the abbreviated year
-     relative to some century. The begin of century is set by 
-	 <a href="#method_set2DigitYearStart"><code>set2DigitYearStart</code></a>
-	 method. By default, it's 80 years before the <code>JsSimpleDateFormat</code>
-     instance is created. For example, using a pattern of "MM/dd/yy" and the begin
-     of century is 1917,  the string
-     "01/11/12" would be interpreted as Jan 11, 2012 while the string "05/04/64"
-     would be interpreted as May 4, 1964.
-     During parsing, only strings consisting of exactly two digits, will be parsed into the default century.
-     Any other numeric string, such as a one digit string, a three or more digit
-     string, or a two characters string that isn't all digits (for example, "-1"), is
-     interpreted literally.  So "01/02/3" or "01/02/003" are parsed, using the
-     same pattern, as Jan 2, 3 AD.  Likewise, "01/02/-3" is parsed as Jan 2, 4 BC.</p>
+ <li><strong><a name="year">Year:</a></strong> The following rules apply (<code>JsSimpleDateFormat</code>
+    only supports Gregorian calendar):
+    <ul>
+      <li>For formatting, if the number of pattern letters is 2, the year is truncated
+        to 2 digits; otherwise it is interpreted as a <a href="#number">Number</a>.</li>
+      <li>For parsing, if the number of pattern letters is more than 2, the year is
+        interpreted literally, regardless of the number of digits. So using the pattern
+        "MM/dd/yyyy", "01/11/12" parses to Jan 11, 12 A.D.</li>
+      <li>For parsing with the abbreviated year pattern ("y" or "yy"),
+        <code>JsSimpleDateFormat</code> must interpret the abbreviated year relative to
+        some century. The begin of century is set by
+        <a href="#method_set2DigitYearStart"><code>set2DigitYearStart</code></a> method.
+        By default, it's 80 years before the <code>JsSimpleDateFormat</code> instance is
+        created. For example, using a pattern of "MM/dd/yy" and the begin of century is
+        1917, the string "01/11/12" would be interpreted as Jan 11, 2012 while the string
+        "05/04/64" would be interpreted as May 4, 1964. During parsing, only strings
+        consisting of exactly two digits, will be parsed into the default century. Any
+        other numeric string, such as a one digit string, a three or more digit string,
+        is interpreted literally.<br/>
+        <strong>NOTE:</strong> The documentation of Java <code>SimpleDateFormat</code>
+        still explains how the negative year is interpreted. Actually, the recent version
+        of <code>SimpleDateFormat</code> will raise an exception when parsing a negative
+        year. Therefore, in the current version, <code>JsSimpleDateFormat</code> doesn't
+        support a negative year. Please use the era designator (BC) instead.</li>
+    </ul>
  </li>
  <li><strong><a name="month">Month:</a></strong>
      If the number of pattern letters is 3 or more, the month is
@@ -490,16 +507,16 @@ The list of the pattern letters:
      
   <pre>
     <a name="GMTOffsetTimeZone"><i>GMTOffsetTimeZone:</i></a>
-		<code>GMT</code> <i>Sign</i> <i>Hours</i> <code>:</code> <i>Minutes</i>
+        <code>GMT</code> <i>Sign</i> <i>Hours</i> <code>:</code> <i>Minutes</i>
     <i>Sign:</i> one of
-		<code>+ -</code>
+        <code>+ -</code>
     <i>Hours:</i>
-		<i>Digit</i>
-		<i>Digit</i> <i>Digit</i>
+        <i>Digit</i>
+        <i>Digit</i> <i>Digit</i>
     <i>Minutes:</i>
-		<i>Digit</i> <i>Digit</i>
+        <i>Digit</i> <i>Digit</i>
     <i>Digit:</i> one of
-		<code>0 1 2 3 4 5 6 7 8 9</code>
+        <code>0 1 2 3 4 5 6 7 8 9</code>
   </pre>
   <i>Hours</i> must be between 0 and 23, and 
   <i>Minutes</i> must be between 00 and 59.
@@ -513,9 +530,9 @@ The list of the pattern letters:
   For formatting, the RFC 822 4-digit time zone format is used:
   <pre>
     <i>RFC822TimeZone:</i>
-		<i>Sign</i> <i>TwoDigitHours</i> <i>Minutes</i>
+        <i>Sign</i> <i>TwoDigitHours</i> <i>Minutes</i>
     <i>TwoDigitHours:</i>
-		<i>Digit Digit</i>
+        <i>Digit Digit</i>
   </pre>
   <i>TwoDigitHours</i> must be between 00 and 23. Other definitions are as for 
   <a href="#timezone">general time zones</a>.
@@ -531,48 +548,61 @@ The list of the pattern letters:
      
   <pre>
     <i>ISO8601TimeZone:</i>
-		<i>OneLetterISO8601TimeZone</i>
-		<i>TwoLetterISO8601TimeZone</i>
-		<i>ThreeLetterISO8601TimeZone</i>
+        <i>OneLetterISO8601TimeZone</i>
+        <i>TwoLetterISO8601TimeZone</i>
+        <i>ThreeLetterISO8601TimeZone</i>
     <i>OneLetterISO8601TimeZone:</i>
-		<i>Sign</i> <i>TwoDigitHours</i>
+        <i>Sign</i> <i>TwoDigitHours</i>
+        <i>Z</i>
     <i>TwoLetterISO8601TimeZone:</i>
-		<i>Sign</i> <i>TwoDigitHours</i> <i>Minutes</i>
+        <i>Sign</i> <i>TwoDigitHours</i> <i>Minutes</i>
+        <i>Z</i>
     <i>ThreeLetterISO8601TimeZone:</i>
-		<i>Sign</i> <i>TwoDigitHours</i> <code>:</code> <i>Minutes</i>
+        <i>Sign</i> <i>TwoDigitHours</i> <code>:</code> <i>Minutes</i>
+        <i>Z</i>
   </pre>
   
   Other definitions are as for <a href="#timezone">general time zones</a>
   or <a href="#rfc822timezone">RFC 822 time zones</a>.
   <br/><br/>
      
-  If the number of pattern letters is 1, any fraction of an hour is ignored. For example,
-  if the pattern is <code>"X"</code> and the time zone is <code>"GMT+05:30"</code>, 
+  For formatting, if the offset value from GMT is 0, <code>"Z"</code> is produced. If
+  the number of pattern letters is 1, any fraction of an hour is ignored. For example,
+  if the pattern is <code>"X"</code> and the time zone is <code>"GMT+05:30"</code>,
   <code>"+05"</code> is produced.
   <br/><br/>
   
-  If the number of pattern letters is 4 or more, it's interpreted like 3 letters.
+  For parsing, <code>"Z"</code> is parsed as the UTC time zone designator.
+  <a href="#timezone">General time zones</a> are not accepted.
+  <br/><br/>
+
+  If the number of pattern letters is 4 or more, <code>FormatError</code> is thrown.
   <br/><br/>
  </li>
 </ul>
 
-<h5><a name="Net_Date_and_Time_Patterns">.NET Compatible Date and Time Patterns</a></h5>
-If <a href="#property_isNetCompat"><code>isNetCompat</code></a> is set to <code>true</code> then
-<code>JsSimpleDateFormat</code> date time pattern will be compatible with
-<a href="https://msdn.microsoft.com/en-us/library/8kb3ddd4(v=vs.110).aspx">.NET DateTime Format String</a>.
-It doesn't eliminate the Java version of date time format string, but it extends the formatting
-string. The Java version will still work with some minor differences. .NET version of date time
-format will not be exactly the same as the original one but it should be closely.
+<h4><a name="Net_Date_and_Time_Patterns">.NET Compatible Date and Time Patterns</a></h4>
+If you use .Net to develop the backend application, you may prefer to use <i>.Net-compatible</i>
+pattern string. For this purpose, you can use
+<a href="#Class_NetDateTimeFormat"><code>NetDateTimeFormat</code></a> class. The class
+supports the date time pattern which is compatible with
+<a href="https://learn.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings">.NET Custom date and time format strings</a>.
+However, there are some different behaviors. Because <code>NetDateTimeFormat</code>
+inherits <code>JsSimpleDateFormat</code>, it behaves more closely to its parent. For
+example, with pattern <code>"HHH"</code> and the hour is 23, .Net <code>DateTime</code>
+produces <code>"23"</code> but Java <code>SimpleDateFormat</code> produces <code>"023"</code>.
+<code>NetDateTimeFormat</code> also produces <code>"023"</code>, different from the real
+.Net version. But if you use no awkward pattern, there will be no difference (in fact,
+hour will not more than two digits).
 <br><br/>
 
-There are some new pattern letters in .NET compatible mode and also the are some minor differences
-for some existing pattern letters in Java version. The following table is the list of the
-differences and new pattern letters.
+The following table lists the pattern characters which applies when using
+<a href="#Class_NetDateTimeFormat"><code>NetDateTimeFormat</code></a> class:
 <blockquote>
 <table class="tbl" border="0" cellspacing="3" cellpadding="0">
   <tbody>
     <tr style="background-color: rgb(204, 204, 255);">
-      <th align="left">Letter</th>
+      <th align="left">Character</th>
       <th align="left">Explanation</th>
     </tr>
     <tr>
@@ -580,7 +610,8 @@ differences and new pattern letters.
         <code>d</code>
       </td>
       <td>
-        For 3 or more letters, it's interpreted like <a href="#letter_E">E</a> letter.
+        For 1 or 2 letters, it's the same as Java <a href="#letter_d"><code>d</code></a> letter.<br/>
+        For 3 or more letters, it's interpreted like Java <a href="#letter_E"><code>E</code></a> letter.
       </td>
     </tr>
     <tr style="background-color: rgb(238, 238, 255);">
@@ -589,16 +620,70 @@ differences and new pattern letters.
       </td>
       <td>
         One letter is the tenths of a second.<br/>
-	Two letters is the hundredths of a second.<br/>
-	Three or more letters is the milliseconds.
+        Two letters is the hundredths of a second.<br/>
+        Three or more letters is the milliseconds.<br/>
+        For example, if the value of milliseconds is 10 then the pattern <code>"fff"</code>
+        will produce <code>"010"</code>, <code>"ff"</code> will produce <code>"01"</code>
+        and <code>"f"</code> will produce <code>"0"</code>.
       </td>
     </tr>
     <tr>
       <td>
+        <code>F</code>
+      </td>
+      <td>
+        The same as <code>f</code> letter but without the trailing zero(s). For example,
+        if the value of milliseconds is 10 then <code>"FFF"</code> will produce
+        <code>"01"</code>, <code>"FF"</code> will also produce <code>"01"</code> and
+        <code>"F"</code> will produce an empty string. 
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
         <code>g</code>
       </td>
       <td>
-        The period or era. Like <a href="#letter_G">G</a> letter.
+        The period or era. Like Java <a href="#letter_G"><code>G</code></a> letter.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>h</code>
+      </td>
+      <td>
+        The same as Java <a href="#letter_h"><code>h</code></a> letter.
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>H</code>
+      </td>
+      <td>
+        The same as Java <a href="#letter_H"><code>H</code></a> letter.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>m</code>
+      </td>
+      <td>
+        The same as Java <a href="#letter_m"><code>m</code></a> letter.
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>M</code>
+      </td>
+      <td>
+        The same as Java <a href="#letter_M"><code>M</code></a> letter.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>s</code>
+      </td>
+      <td>
+        The same as Java <a href="#letter_s"><code>s</code></a> letter.
       </td>
     </tr>
     <tr style="background-color: rgb(238, 238, 255);">
@@ -606,7 +691,9 @@ differences and new pattern letters.
         <code>t</code>
       </td>
       <td>
-        The AM/PM designator. If only one letter, only the first character will be used, such as 'A' for 'AM' and 'P' for 'PM'.
+        The AM/PM designator. If only one letter, only the first character will be used,
+        such as <code>'A'</code> for <code>'AM'</code> and <code>'P'</code> for
+        <code>'PM'</code>.
       </td>
     </tr>
     <tr>
@@ -614,7 +701,12 @@ differences and new pattern letters.
         <code>y</code>
       </td>
       <td>
-        In formatting, one letter is also truncated to two digits year. The rest is the same as the Java version.
+        Mostly, the same as Java <a href="#letter_y"><code>y</code></a> letter. The
+        difference is in the interpretation for only one letter pattern. In formatting,
+        one letter will also produces a truncated year without century. If the truncated
+        year is less than 10, it will produce one digit year, different from two letters
+        that always produces two digit years. In parsing, one digit value of year is also
+        interpreted as a abbreviated year (relative to a century).
       </td>
     </tr>
     <tr style="background-color: rgb(238, 238, 255);">
@@ -622,17 +714,198 @@ differences and new pattern letters.
         <code>z</code>
       </td>
       <td>
-        For formatting, it's like <a href="#letter_z">z</a> letter in Java version.<br/>
-	For parsing, beside accepted format in Java version,<br/>
-	one letter accepts format: "+7" and "+07"<br/>
-	two letters accepts format: "+07"<br/>
-	three or more letters accepts format: "+07:00"
+        Timezone that uses the following formats:<br/>
+        one letter: <code>"+7"</code><br/>
+        two letters: <code>"+07"</code><br/>
+        three or more letters: <code>"+07:00"</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>K</code>
+      </td>
+      <td>
+        It's like <a href="#letter_X">X</a> letter in Java version but always uses format
+        <code>"+/-hh:mm"</code>
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>.</code>
+      </td>
+      <td>
+        A decimal point. It has a special behavior when followed by the <code>F</code>
+        letter pattern. If <code>F</code> pattern produces an empty string (because of 0
+        millisecond) the the decimal point isn't shown either.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>'</code>
+      </td>
+      <td>
+        Single quote. The same as Java version, a quoted text is escaped from being
+        interpreted as the pattern. Different from Java version, to escape a single quote,
+        you must use backslash (<code>\</code>) in front of the single quoute.
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>"</code>
+      </td>
+      <td>
+        Double quote. The same as the single quote, to escape a text from interpretation.
+        It's useful if you use many single quotes in the text.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>\</code>
+      </td>
+      <td>
+        Backslash. To escape a single character. The character following a backslash will
+        not be interpreted.
+      </td>
+    </tr>
+    <tr style="background-color: rgb(238, 238, 255);">
+      <td>
+        <code>/</code>
+      </td>
+      <td>
+        It will be replaced by the value of <code>DateTimeFormatInfo.DateSeparator</code>.
+        The default value is <code>"/"</code>. You may change its value to another
+        character such as <code>"-"</code>.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>:</code>
+      </td>
+      <td>
+        It will be replaced by the value of <code>DateTimeFormatInfo.TimeSeparator</code>.
+        The default value is <code>":"</code>. You may change its value to another
+        character such as <code>"."</code>.
       </td>
     </tr>
   </tbody>
 </table>
 </blockquote>
 
+<h4><a name="Duration_Patterns">Duration Patterns</a></h4>
+Beside date-time formatting, this library also supports to format a duration. For this
+purpose, we use <a href="#Class_TimerFormat"><code>TimerFormat</code></a> class. The
+pattern string is based on .Net
+<a href="https://learn.microsoft.com/en-us/dotnet/standard/base-types/custom-timespan-format-strings">Custom TimeSpan format strings</a>
+but there are some differences. <code>TimerFormat</code> class inherits
+<code>JsSimpleDateFormat</code> class, thus the behavior of interpretation will be more
+closely to its parent.<br/><br/>
+
+Below is the list of supported pattern characters:
+<blockquote>
+  <table class="tbl" border="0" cellspacing="3" cellpadding="0">
+    <tbody>
+      <tr style="background-color: rgb(204, 204, 255);">
+        <th align="left">Character</th>
+        <th align="left">Explanation</th>
+      </tr>
+      <tr>
+        <td>
+          <code>d</code>
+        </td>
+        <td>
+          It's the total days of the duration without counting the remaining hours,
+          minutes, seconds and milliseconds. The duration format doesn't support to
+          format the number of months and years. So, the value of total days may exceed
+          a month or a year.
+        </td>
+      </tr>
+      <tr style="background-color: rgb(238, 238, 255);">
+        <td>
+          <code>h</code>
+        </td>
+        <td>
+          The hour part (0-23)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <code>m</code>
+        </td>
+        <td>
+          The minute part (0-59)
+        </td>
+      </tr>
+      <tr style="background-color: rgb(238, 238, 255);">
+        <td>
+          <code>s</code>
+        </td>
+        <td>
+          The second part (0-59)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <code>f</code>
+        </td>
+        <td>
+          One letter is the tenths of a second.<br/>
+          Two letters is the hundredths of a second.<br/>
+          Three or more letters is the milliseconds.<br/>
+          For example, if the value of milliseconds is 10 then the pattern <code>"fff"</code>
+          will produce <code>"010"</code>, <code>"ff"</code> will produce <code>"01"</code>
+          and <code>"f"</code> will produce <code>"0"</code>.
+        </td>
+      </tr>
+      <tr style="background-color: rgb(238, 238, 255);">
+        <td>
+          <code>F</code>
+        </td>
+        <td>
+          The same as <code>f</code> letter but without the trailing zero(s). For example,
+          if the value of milliseconds is 10 then <code>"FFF"</code> will produce
+          <code>"01"</code>, <code>"FF"</code> will also produce <code>"01"</code> and
+          <code>"F"</code> will produce an empty string. 
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <code>.</code>
+        </td>
+        <td>
+          A decimal point. It has a special behavior when followed by the <code>F</code>
+          letter pattern. If <code>F</code> pattern produces an empty string (because of 0
+          millisecond) the the decimal point isn't shown either.
+        </td>
+      </tr>
+      <tr style="background-color: rgb(238, 238, 255);">
+        <td>
+          <code>-</code>
+        </td>
+        <td>
+          Minus sign. It will show a negative sign if the duration is negative. If positive,
+          it will show nothing.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <code>'</code>
+        </td>
+        <td>
+          Single quote. Like the date-time formatting, it's to escape a text.
+        </td>
+      </tr>
+      <tr style="background-color: rgb(238, 238, 255);">
+        <td>
+          <code>\</code>
+        </td>
+        <td>
+          Backslash. To escape a single character. The character following a backslash will
+          not be interpreted.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
 
 <h3><a name="Class_JsSimpleDateFormat">Class <code>JsSimpleDateFormat</code></a></h3>
 <h4>Constructor</h4>
@@ -645,26 +918,34 @@ differences and new pattern letters.
 	  <code>_getDefaultPattern</code> method, like the below one. Suppose the
 	  default pattern you want is <nobr>"MMM dd, yyyy HH:mm a"</nobr>:	  
 	  <pre>
-	function MyJsSimpleDateFormat() {
-		JsSimpleDateFormat.apply(this,arguments);
-	}
-	MyJsSimpleDateFormat.__extends__(JsSimpleDateFormat, {
-	_getDefaultPattern: function() {
-		return "MMM dd, yyyy HH:mm a";
-	}
-	});
+  function MyJsSimpleDateFormat() {
+    JsSimpleDateFormat.apply(this,arguments);
+  }
+  MyJsSimpleDateFormat.__extends__(JsSimpleDateFormat, {
+    _getDefaultPattern: function() {
+      return "MMM dd, yyyy HH:mm a";
+    }
+  });
 	  </pre>	  
 	  <p><code>__extends__</code> method is written in JsSimpleDateFormat.js.
 	  If using usual way, we write like this:</p>
 	  <pre>
-	function MyJsSimpleDateFormat() {
-		JsSimpleDateFormat.apply(this,arguments);
-	}
-	MyJsSimpleDateFormat.prototype = new JsSimpleDateFormat();
-	MyJsSimpleDateFormat.prototype._getDefaultPattern = function() {
-		return "MMM dd, yyyy HH:mm a";
-	}
+  function MyJsSimpleDateFormat() {
+    JsSimpleDateFormat.apply(this,arguments);
+  }
+  MyJsSimpleDateFormat.prototype = new JsSimpleDateFormat();
+  MyJsSimpleDateFormat.prototype._getDefaultPattern = function() {
+    return "MMM dd, yyyy HH:mm a";
+  }
 	  </pre>
+    <p>or you may use ES6 syntax which is more simple:</p>
+    <pre>
+  class MyJsSimpleDateFormat extends JsSimpleDateFormat {
+    _getDefaultPattern() {
+      return "MMM dd, yyyy HH:mm a";
+    }
+  }
+    </pre>
   </li>
   <li><a name="contructor2"><code>JsSimpleDateFormat(sPattern)</code></a><br/>
       Creates a <code>JsSimpleDateFormat</code> object using the pattern
@@ -677,7 +958,7 @@ differences and new pattern letters.
 	    </li>
 	  </ul>
   </li>
-  <li><a name="contructor3"><code>JsSimpleDateFormat(sPattern,sLocale,isNetCompat)</code></a><br/>
+  <li><a name="contructor3"><code>JsSimpleDateFormat(sPattern, sLocale)</code></a><br/>
       Creates a <code>JsSimpleDateFormat</code> object using the pattern
 	  and the locale as defined by parameter.<br/>
 	  <b>Parameters:</b>
@@ -692,13 +973,9 @@ differences and new pattern letters.
 			one. For further information, see
 			<a href="#Class_JsDateFormatSymbols"><code>JsDateFormatSymbols</code></a>.
 	    </li>
-		<li><code>isNetCompat</code>, optional, is the value for
-		    <a href="#property_isNetCompat"><code>isNetCompat</code></a>
-		    property.
-	    </li>
 	  </ul>
   </li>
-  <li><code>JsSimpleDateFormat(sPattern,oSymbols,isNetCompat)</code><br/>
+  <li><code>JsSimpleDateFormat(sPattern, oSymbols)</code><br/>
       Creates a <code>JsSimpleDateFormat</code> object using the pattern
 	  and the locale as defined by parameter.<br/>
 	  <b>Parameters:</b>
@@ -710,10 +987,6 @@ differences and new pattern letters.
 		    <a href="#Class_JsDateFormatSymbols"><code>JsDateFormatSymbols</code></a>
 		    object which defines the name of days, months etc, which are usually shown
 			in date time information.
-	    </li>
-		<li><code>isNetCompat</code>, optional, is the value for
-		    <a href="#property_isNetCompat"><code>isNetCompat</code></a>
-		    property.
 	    </li>
 	  </ul>
   </li>
@@ -740,15 +1013,6 @@ differences and new pattern letters.
 	  is set to <code>true</code>, <code>JsSimpleDateFormat</code> will parse
 	  more loosely. In the previous case, it will parse the string
 	  successfully.
-  </li>
-  <li><a name="property_isNetCompat"><code>isNetCompat</code></a><br/>
-      If it's <code>true</code>, the formatting pattern string will be
-	  compatible with .NET DateTime format string. More explanation, see
-	  <a href="#Net_Date_and_Time_Patterns">.NET Compatible Date and Time
-	  Patterns</a>. This property must be set via
-	  <a href="#contructor3">constructor</a>. If not so, you must re-invoke
-	  <a href="#method_applyPattern"><code>applyPattern</code></a> method after
-	  setting this property.
   </li>
 </ul>
 
@@ -792,7 +1056,7 @@ differences and new pattern letters.
 	  object used by this object.
   </li>
   <li><a name="method_parse"><code>parse(s)</code></a><br/>
-      Parses a string to be a <code>Date</code> object based on the pattern used by
+    Parses a string to be a <code>Date</code> object based on the pattern used by
 	  this object. It's possible there will be a missing field in the pattern
 	  to construct a complete date time. Perhaps, there is no year or month or 
 	  day etc. To avoid that, in the beginning of parsing, this method will
@@ -803,31 +1067,46 @@ differences and new pattern letters.
 	  and overwrite <code>_getInitDate</code> method as below (suppose you want
 	  the iniatial date time is the current date time):<br/>
 	  <pre>
-	function MyJsSimpleDateFormat() {
-		JsSimpleDateFormat.apply(this,arguments);
-	}
-	MyJsSimpleDateFormat.__extends__(JsSimpleDateFormat, {
-	_getInitDate: function() {
-		return new Date();
-	}
-	});
+  function MyJsSimpleDateFormat() {
+    JsSimpleDateFormat.apply(this,arguments);
+  }
+  MyJsSimpleDateFormat.__extends__(JsSimpleDateFormat, {
+    _getInitDate: function() {
+      return new Date();
+    }
+  });
 	  </pre>
 	  <p><code>__extends__</code> method is written in JsSimpleDateFormat.js.
 	  If using usual way, we write like this:</p>
 	  <pre>
-	function MyJsSimpleDateFormat() {
-		JsSimpleDateFormat.apply(this,arguments);
-	}
-	MyJsSimpleDateFormat.prototype = new JsSimpleDateFormat();
-	MyJsSimpleDateFormat.prototype._getInitDate = function() {
-		return new Date();
-	}
+  function MyJsSimpleDateFormat() {
+    JsSimpleDateFormat.apply(this,arguments);
+  }
+  MyJsSimpleDateFormat.prototype = new JsSimpleDateFormat();
+  MyJsSimpleDateFormat.prototype._getInitDate = function() {
+    return new Date();
+  }
 	  </pre>
-	  <p>This method will return <code>null</code> if the string cannot be parsed
-	  to be a valid date time. Note, the method may not use the entire text, only
-	  a substring positioned at index 0. For example, "Jan 3, 2008 is Thursday"
-	  will be parsed successfully using pattern "MMM d, yyyy" even if the
-	  remaining string " is Thursday" doesn't match the pattern.</p>
+    <p>or you may use ES6 syntax which is more simple:</p>
+    <pre>
+  class MyJsSimpleDateFormat extends JsSimpleDateFormat {
+    constructor(sPattern, param) {
+      super(sPattern, param);
+      this.set2DigitYearStart(new Date(2000, 0 , 1));
+    }
+
+    _getInitDate() {
+      return new Date();
+    }
+  }
+    </pre>
+
+	  <p><code>parse</code> method will return <code>null</code> if the string
+    cannot be parsed to be a valid date time. Note, the method may not use
+    the entire text, only a substring positioned at index 0. For example,
+    "Jan 3, 2008 is Thursday" will be parsed successfully using pattern
+    "MMM d, yyyy" even if the remaining string " is Thursday" doesn't match
+    the pattern.</p>
 	  <b>Parameters:</b>
 	  <ul>
 		<li><code>s</code> is a string to be parsed.
@@ -837,7 +1116,7 @@ differences and new pattern letters.
 	  The <code>Date</code> object as the result of parsing or <code>null</code> if
 	  the parsing failed.
   </li>
-  <li><a name="method_parse2"><code>parse(s,oPos)</code></a><br/>
+  <li><a name="method_parse2"><code>parse(s, oPos)</code></a><br/>
       To parse a string starting at index defined by <code>oPos</code>.
 	  If the parsing is successful, this index will be updated to the index after the last
 	  character parsed successfully (this method may not parse until the end of string)
@@ -846,7 +1125,7 @@ differences and new pattern letters.
 	  Paramerter <code>oPos</code> is an object whose properties: <code>index</code>
 	  and <code>errorIndex</code>. The <code>index</code> property is the starting
 	  index as explained before. The <code>errorIndex</code> property will be used
-	  if the parsing failed. It notes the index when the error begins to happen.
+	  if the parsing failed. It notes the index where the error begins to happen.
 	  If an error occurs, the <code>index</code> property will not be updated but the
 	  <code>errorIndex</code> property will be updated. Example:
 	  <pre>
@@ -959,7 +1238,7 @@ whenever creating <code>JsSimpleDateFormat</code> object, do these steps.
 Specify the code for you language, suppose you want the code "xx".
 It should be two letters as specified in
 <a href="http://www.loc.gov/standards/iso639-2/php/English_list.php">http://www.loc.gov/standards/iso639-2/php/English_list.php</a>,
-but you may choose what you like. Nevermind if for your own. Create a JavaScript file and
+but you may choose what you like. Nevermind if it's for your own. Create a JavaScript file and
 write the code like the below one inside this JavaScript file.</p>
 	<pre>
 	JsDateFormatSymbols.__symbols__.xx = {
@@ -1054,6 +1333,148 @@ document after inserting JsSimpleDateFormat.js.</p>
   </li>
 </ul>
 
+<h3><a name="Class_NetDateTimeFormat">Class <code>NetDateTimeFormat</code></a></h3>
+This class inherits <a href="#Class_JsSimpleDateFormat">JsSimpleDateFormat</a>. All
+methods, properties and constructors are the same as its parent's. To use this class, you
+must insert two scripts in your HTML document:
+<pre>
+&lt;script src="JsSimpleDateFormat.min.js"&gt;&lt;/script&gt;
+&lt;script src="NetDateTimeFormat.min.js"&gt;&lt;/script&gt;
+</pre>
+
+<h3><a name="Class_TimerFormat">Class <code>TimerFormat</code></a></h3>
+This class inherits <a href="#Class_NetDateTimeFormat">NetDateTimeFormat</a>. This
+class is to format/parse using <a href="#Duration_Patterns">Duration Patterns</a>. There
+is no <code>Duration</code> object in Javascript, hence, this class is also operated to
+the <code>Date</code> object. The duration is taken from the number of milliseconds
+returned by <code>getTime</code> method of the <code>Date</code> object.<br/><br/>
+
+This class overwrites its parent at some points as follows:
+<ul>
+  <li><strong>Constructor</strong><br/>
+      The second parameter is <a href="#Class_TimerFormatSymbols"><code>TimerFormatSymbols</code></a>
+      object, not <a href="#Class_JsDateFormatSymbols"><code>JsDateFormatSymbols</code></a>
+  </li>
+  <li><strong>Methods:</strong>
+    <ul>
+      <li><code>approxFormat(oDate, sPrefix, sSuffix)</code><br/>
+          It's a new method defined by this class. This method will format the duration
+          to be a string which tells the appoximate time long that the duration has. This
+          method yields a string like "a few seconds", "a minute", "2 minutes", "10 days",
+          "a month", "3 years" etc. If it says "a month" then it means "a month
+          approximately", not exactly "a month".<br/>
+          This method can be an alternative of <code>from*</code> and <code>to*</code>
+          method of <code>moment</code> package.<br/>
+          <strong>Parameters:</strong><br/>
+          The first parameter can be a <code>Date</code> object or an integer. If it's an
+          integer then it's the total number of milliseconds for the duration.<br/>
+          The second and the third parameter are optional. They are the prefix and the
+          suffix added to the returned string.
+      </li>
+      <li><code>format</code><br/>
+          The parameter can be a <code>Date</code> object or an integer. If it's an integer
+          then it's the total number of milliseconds for the duration.
+      </li>
+      <li><code>getDateFormatSymbols</code><br/>
+        It will raise an error because it's not supported anymore, replaced by <code>getTimerFormatSymbols</code>
+        method.
+      </li>
+      <li><code>getTimerFormatSymbols</code><br/>
+          It returns a <a href="#Class_TimerFormatSymbols"><code>TimerFormatSymbols</code></a>
+          object that is being used.
+      </li>
+      <li><code>setDateFormatSymbols</code><br/>
+        It will raise an error because it's not supported anymore, replaced by <code>setTimerFormatSymbols</code>
+        method.
+      </li>
+      <li><code>setTimerFormatSymbols</code><br/>
+        To set the localized symbols. The parameter is a
+        <a href="#Class_TimerFormatSymbols"><code>TimerFormatSymbols</code></a> object.
+      </li>
+    </ul>
+  </li>
+</ul>
+
+To use this class, you must insert three scripts in your HTML document:
+<pre>
+&lt;script src="JsSimpleDateFormat.min.js"&gt;&lt;/script&gt;
+&lt;script src="NetDateTimeFormat.min.js"&gt;&lt;/script&gt;
+&lt;script src="TimerFormat.min.js"&gt;&lt;/script&gt;
+</pre>
+
+<h3><a name="Class_TimerFormatSymbols">Class <code>TimerFormatSymbols</code></a></h3>
+This class is to localize the duration format string. It's used by
+<a href="#Class_TimerFormat"><code>TimerFormat</code></a> class, especially by
+<code>approxFormat</code> method.
+
+<h4>Constructor</h4>
+The constructor requires a parameter. The parameter can be a string or an object. If it's
+a string then it's a locale id ('en' or 'id'). If it's an object then it defines all
+localized words. The structure of the object as follows:
+<pre>
+{
+  fewSeconds: 'a few seconds',
+  aMinute: 'a minute',
+  minutes: '${count} minutes',
+  anHour: 'an hour',
+  hours: '${count} hours',
+  aDay: 'a day',
+  days: '${count} days',
+  aMonth: 'a month',
+  months: '${count} months',
+  aYear: 'a year',
+  years: '${count} years'
+}
+</pre>
+
+<h4>Method</h4>
+<ul>
+  <li>
+    <code>getFewSeconds</code> and <code>setFewSeconds(s)</code><br/>
+    Gets/sets the string "a few seconds".
+  </li>
+  <li>
+    <code>getAMinute</code> and <code>setAMinute(s)</code><br/>
+    Gets/sets the string "a minute".
+  </li>
+  <li>
+    <code>getMinutes</code> and <code>setMinutes(s)</code><br/>
+    Gets/sets the string "${count} minutes".
+  </li>
+  <li>
+    <code>getAnHour</code> and <code>setAnHour(s)</code><br/>
+    Gets/sets the string "an hour".
+  </li>
+  <li>
+    <code>getHours</code> and <code>setHours(s)</code><br/>
+    Gets/sets the string "${count} hours".
+  </li>
+  <li>
+    <code>getADay</code> and <code>setADay(s)</code><br/>
+    Gets/sets the string "a day".
+  </li>
+  <li>
+    <code>getDays</code> and <code>setDays(s)</code><br/>
+    Gets/sets the string "${count} days".
+  </li>
+  <li>
+    <code>getAMonth</code> and <code>setAMonth(s)</code><br/>
+    Gets/sets the string "a month".
+  </li>
+  <li>
+    <code>getMonths</code> and <code>setMonths(s)</code><br/>
+    Gets/sets the string "${count} months".
+  </li>
+  <li>
+    <code>getAYear</code> and <code>setAYear(s)</code><br/>
+    Gets/sets the string "a year".
+  </li>
+  <li>
+    <code>getYears</code> and <code>setYears(s)</code><br/>
+    Gets/sets the string "${count} years".
+  </li>
+</ul>
+
 <h3><a name="Used_as_Nodejs_Module">Used as Node.js Module</a></h3>
 To install JsSimpleDateFormat package, you can use console command:
 <pre>
@@ -1066,6 +1487,12 @@ import DateFormat, {JsDateFormatSymbols} from 'jssimpledateformat';
 let df = new DateFormat('d MMM yyyy HH:mm:ss', new JsDateFormatSymbols('en'));
 console.log(df.format(new Date()));
 </pre>
+
+The other classes that can be improted are <code>DateTimeFormatInfo</code>,
+<code>FormatError</code>, 
+<code>NetDateTimeFormat</code>, 
+<code>TimerFormat</code> 
+and <code>TimerFormatSymbols</code>.
 </div>
 </body>
 </html>

@@ -1,8 +1,8 @@
 /*! ****
-JsSimpleDateFormat v2.1 (20200121)
+JsSimpleDateFormat v3.0.0
 This library is for formatting and parsing date time
 
-Copyright (C) 2008, 2016, 2020 AT Mulyana (atmulyana@yahoo.com)
+Copyright (C) AT Mulyana (atmulyana@yahoo.com)
 
 This library is free software; you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License version 3.0
@@ -15,10 +15,22 @@ Function.prototype.__extends__ = function(fParent,oExtMembers) {
 	this.prototype = new fParent();
 	for (var i = 1; i<arguments.length; i++) {
 		for (m in arguments[i]) {
-			if (this.prototype[m] !== arguments[i][m]) this.prototype[m] = arguments[i][m];
+			if (this.prototype[m] !== arguments[i][m]) //needs to check because assignment always creates new property on instance even if the ancestors instance already has the same property with the same value
+				this.prototype[m] = arguments[i][m];
 		}
 	}
 }
+
+if (!String.prototype.trim) {
+	String.prototype.trim = function() {
+		return this.replace(/^\s+/,'').replace(/\s+$/,'');
+	};
+}
+
+function FormatError(message) {
+	this.message = message;
+}
+FormatError.prototype = new Error();
 
 function JsDateFormatSymbols(sLocale) {
 	if (!JsDateFormatSymbols.__symbols__[sLocale]) sLocale = 'en';
@@ -36,94 +48,88 @@ function JsDateFormatSymbols(sLocale) {
 	}
 }
 JsDateFormatSymbols.prototype = {
-_setMap: function(arSymbols) {
-	var map = {};
-	for (var i=0; i<arSymbols.length; i++) map[arSymbols[i].toUpperCase()] = i;
-	arSymbols.__map__ = map;
-},
-getAmPmStrings: function() {
-	return this._amPmStrings;
-},
-getShortAmPmStrings: function() {
-	return this._shortAmPmStrings;
-},
-getEras: function() {
-	return this._eras;
-},
-getMonths: function() {
-	return this._months;
-},
-getShortMonths: function() {
-	return this._shortMonths;
-},
-getShortWeekdays: function() {
-	return this._shortWeekdays;
-},
-getWeekdays: function() {
-	return this._weekdays;
-},
-setAmPmStrings: function(arAmPmStrings) {
-	this._setMap(arAmPmStrings);
-	this._amPmStrings = arAmPmStrings;
-	this._shortAmPmStrings = []
-	for (var i=0; i<this._amPmStrings.length; i++) this._shortAmPmStrings.push(this._amPmStrings[i].charAt(0));
-	this._setMap(this._shortAmPmStrings);
-},
-setEras: function(arEras) {
-	this._setMap(arEras);
-	this._eras = arEras;
-},
-setMonths: function(arMonths) {
-	this._setMap(arMonths);
-	return this._months = arMonths;
-},
-setShortMonths: function(arShortMonths) {
-	this._setMap(arShortMonths);
-	return this._shortMonths = arShortMonths;
-},
-setShortWeekdays: function(arShortWeekdays) {
-	this._setMap(arShortWeekdays);
-	return this._shortWeekdays = arShortWeekdays;
-},
-setWeekdays: function(arWeekdays) {
-	this._setMap(arWeekdays);
-	return this._weekdays = arWeekdays;
-}
+	_setMap: function(arSymbols) {
+		var map = {};
+		for (var i=0; i<arSymbols.length; i++) map[arSymbols[i].toUpperCase()] = i;
+		arSymbols.__map__ = map;
+	},
+	getAmPmStrings: function() {
+		return this._amPmStrings;
+	},
+	getShortAmPmStrings: function() {
+		return this._shortAmPmStrings;
+	},
+	getEras: function() {
+		return this._eras;
+	},
+	getMonths: function() {
+		return this._months;
+	},
+	getShortMonths: function() {
+		return this._shortMonths;
+	},
+	getShortWeekdays: function() {
+		return this._shortWeekdays;
+	},
+	getWeekdays: function() {
+		return this._weekdays;
+	},
+	setAmPmStrings: function(arAmPmStrings) {
+		this._setMap(arAmPmStrings);
+		this._amPmStrings = arAmPmStrings;
+		this._shortAmPmStrings = []
+		for (var i=0; i<this._amPmStrings.length; i++) this._shortAmPmStrings.push(this._amPmStrings[i].charAt(0));
+		this._setMap(this._shortAmPmStrings);
+	},
+	setEras: function(arEras) {
+		this._setMap(arEras);
+		this._eras = arEras;
+	},
+	setMonths: function(arMonths) {
+		this._setMap(arMonths);
+		return this._months = arMonths;
+	},
+	setShortMonths: function(arShortMonths) {
+		this._setMap(arShortMonths);
+		return this._shortMonths = arShortMonths;
+	},
+	setShortWeekdays: function(arShortWeekdays) {
+		this._setMap(arShortWeekdays);
+		return this._shortWeekdays = arShortWeekdays;
+	},
+	setWeekdays: function(arWeekdays) {
+		this._setMap(arWeekdays);
+		return this._weekdays = arWeekdays;
+	}
 };
 JsDateFormatSymbols.__symbols__ = {
-en: {
-	amPmStrings: ['AM','PM'],
-	eras: ['AD','BC'],
-	months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
-	shortMonths: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-	shortWeekdays: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
-	weekdays: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
-},
-id: {
-	amPmStrings: ['AM','PM'],
-	eras: ['M','SM'],
-	months: ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','Nopember','Desember'],
-	shortMonths: ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nop','Des'],
-	shortWeekdays: ['Min','Sen','Sel','Rab','Kam','Jum','Sab'],
-	weekdays: ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu']
-}
+	en: {
+		amPmStrings: ['AM','PM'],
+		eras: ['AD','BC'],
+		months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+		shortMonths: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+		shortWeekdays: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+		weekdays: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+	},
+	id: {
+		amPmStrings: ['AM','PM'],
+		eras: ['M','SM'],
+		months: ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','Nopember','Desember'],
+		shortMonths: ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nop','Des'],
+		shortWeekdays: ['Min','Sen','Sel','Rab','Kam','Jum','Sab'],
+		weekdays: ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu']
+	}
 };
 
-function JsSimpleDateFormat(sPattern,param,isNetCompat) {
+function JsSimpleDateFormat(sPattern, param) {
 	this._arPtn = [];
 	this._ptn = null;
 	this.flexWhiteSpace = true;
 	this.isLenient = false;
-	this.isNetCompat = isNetCompat ? true : false;
 	
 	if (sPattern) this.applyPattern(sPattern);
 	else this.applyPattern(this._getDefaultPattern());
-	if (param) {
-		if (param instanceof JsDateFormatSymbols) this.setDateFormatSymbols(param);
-		else this.setDateFormatSymbols(new JsDateFormatSymbols(param));
-	} else {
-		this.setDateFormatSymbols(new JsDateFormatSymbols('en'));
-	}
+	this._setFormatSymbols(param);
 	
 	var oStDt = new Date();
 	try {
@@ -140,12 +146,19 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	}
 	JsSimpleDateFormat._Base = Base;
 	Base.prototype = {
+		/** next component in the pattern string */
+		next: null,
+		/** previous component in the pattern string */
+		prev: null,
+		/** does this component have numeric value? */
 		isNumber: function() {
 			return false;
 		},
-		parse: function(s,isNN) {
+		/** parses a string to get the value of this component */
+		parse: function(s) {
 			return -1;
 		},
+		/** returns a string that represents this component */
 		toStr: function() {
 			return "";
 		}
@@ -163,14 +176,15 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		append: function(s) {
 			this._vals.push(s);
 		},
-		parse: function(s,isNN) {
+		parse: function(s) {
 			var sVal = this.toStr();
 			if (this.flexWhiteSpace) {
 				var sRe = sVal.replace(/\s+/g," ");
 				if (sRe == " ") sRe = "\\s+";
-				else sRe = "\\s*" + sRe.replace(/^\s+/,'').replace(/\s+$/,'').replace(/([^a-zA-Z0-9\s])/g,"\\$1").replace(/\s+/g,"\\s+") + "\\s*";
-				var reVal = new RegExp("^("+sRe+")");
-				if (reVal.test(s)) return RegExp.$1.length;
+				else sRe = "\\s*" + sRe.trim().replace(/([^a-zA-Z0-9\s])/g,"\\$1").replace(/\s+/g,"\\s+") + "\\s*";
+				var reVal = new RegExp("^("+sRe+")"),
+				    arMatch = reVal.exec(s);
+				if (arMatch != null) return arMatch[0].length;
 			} else {
 				if (s.indexOf(sVal) == 0) return sVal.length;
 			}
@@ -189,19 +203,25 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	}
 	JsSimpleDateFormat._Ltr = Ltr;
 	Ltr.__extends__(Base, {
+		/** name of date-time component (day, month, year etc.) */
 		name: "",
+		/** the contained Date object */
 		dt: new Date(),
+		/** localized names of date-time component */
 		fmtSb: new JsDateFormatSymbols('en'),
-		isNetCompat: false,
+		/** to add the count of letter in pattern string. Called when applying a pattern string */
 		addCount: function() {
 			this._count++;
 		},
-		applyParseValue: function(oDate,oFields) {
+		/** after parsing and get the parsed value for this date-time component, it's to set the new value to the Date object  */
+		applyParseValue: function(oDate, oFields) {
 			return oDate;
 		},
-		getParseValue: function() {
+		/** The value of this date-time component yielded by the parsing process. It should be the same as `getValue` if valid.  */
+		getParseValue: function(oFields) {
 			return this._parseVal;
 		},
+		/** value of this date-time component returned by the contained Date object */
 		getValue: function() {
 			return -1;
 		}
@@ -213,37 +233,44 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	}
 	JsSimpleDateFormat._Text = Text;
 	Text.__extends__(Ltr, {
+		/** array index for the value of this date-time component if sought in the array of names (getLongValues/getShortValues)  */
 		getIndex: function() {
 			return -1;
 		},
+		/** text representation in long format */
 		getLong: function() {
 			var i = this.getIndex(), arVals = this.getLongValues();
 			if (i >= 0 && i < arVals.length) return arVals[i];
 			return "";
 		},
+		/** array of all possible names for this date-time component in long format */
 		getLongValues: function() {
 			return [];
 		},
+		/** text representation in short format */
 		getShort: function() {
 			var i = this.getIndex(), arVals = this.getShortValues();
 			if (i >= 0 && i < arVals.length) return arVals[i];
 			return "";
 		},
+		/** array of all possible names for this date-time component in short format */
 		getShortValues: function() {
 			return [];
 		},
 		getValue: function() {
 			return this.getIndex();
 		},
+		/** is pattern using short format? */
 		isShort: function() {
 			return this._count < 4;
 		},
-		parse: function(s,isNN) {
+		parse: function(s) {
 			this._parseVal = parseInt("NaN");
 			var arLong = this.getLongValues(), arShort = this.getShortValues();
-			var re = new RegExp("^("+arLong.join("|")+"|"+arShort.join("|")+")", "i");
-			if (!re.test(s)) return -1;
-			var sVal = RegExp.$1.toUpperCase();
+			var re = new RegExp("^("+arLong.join("|")+"|"+arShort.join("|")+")", "i"),
+			    arMatch = re.exec(s);
+			if (arMatch == null) return -1;
+			var sVal = arMatch[0].toUpperCase();
 			if (arLong.__map__[sVal] !== undefined) {
 				this._parseVal = arLong.__map__[sVal];
 				return sVal.length;
@@ -266,18 +293,10 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	}
 	JsSimpleDateFormat._Number = Numb;
 	Numb.__extends__(Ltr, {
-		getNumber: function() {
-			return this.getValue();
-		},
-		isNumber: function() {
-			return true;
-		},
-		isValidVal: function(iVal) {
-			return true;
-		},
-		_getNumberStr: function(s,isNN) {
+		/** gets the numeric text from the parsed string that fits for this date-time component */
+		_getNumberStr: function(s) {
 			var i = 0, c = s.charAt(0), sVal = "";
-			if (isNN) while(i < this._count && c >= '0' && c <= '9') {
+			if (this._isNN()) while(i < this._count && c >= '0' && c <= '9') {
 				sVal += c;
 				if (++i < s.length) c = s.charAt(i); else break;
 			}
@@ -287,17 +306,36 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 			}
 			return sVal;
 		},
-		parse: function(s,isNN) {
+		/** is the next component is Number component? */
+		_isNN: function() {
+			return this.next && this.next.isNumber();
+		},
+		/** converts the text representation for this date-time component to the number value */
+		_parseNumber: function(sVal) {
+			return parseInt(sVal, 10);
+		},
+		/** number representation of this date-time component. It may be different from `getValue`.
+		 *  For example: for month, `getValue` of January returns 0 but `getNumber` returns 1. */
+		getNumber: function() {
+			return this.getValue();
+		},
+		isNumber: function() {
+			return true;
+		},
+		/** Checks the validity of `iVal` in the parsing process. For example: for minute, `iVal` is valid if between 0 and 59 */
+		isValidVal: function(iVal) {
+			return true;
+		},
+		parse: function(s) {
 			this._parseVal = parseInt("NaN");
-			var sVal = this._getNumberStr(s,isNN);
-			if (sVal.length == 0) return -1;
-			var iVal = parseInt(sVal, 10);
-			if (this.isValidVal(iVal)) this._parseVal = iVal; else return -1;
+			var sVal = this._getNumberStr(s);
+			var iVal = this._parseNumber(sVal);
+			if (this.isValidVal(iVal)) this._parseVal = iVal||0; else return -1;
 			return sVal.length;
 		},
 		toStr: function() {
 			var sVal = this.getNumber()+"", s = "";
-			if (sVal.charAt(0) == '-') { sVal = sVal.substr(1); s = "-"; }
+			if (sVal.charAt(0) == '-') { sVal = sVal.substring(1); s = "-"; }
 			while (sVal.length < this._count) sVal = "0" + sVal;
 			return s+sVal;
 		}
@@ -308,7 +346,6 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		Numb.call(this);
 		Text.call(this);
 	}
-	JsSimpleDateFormat._Month = Month;
 	Month.__extends__(Numb, Text.prototype, {
 		name: "month",
 		isNumber: function() {
@@ -317,9 +354,9 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		isValidVal: function(iVal) {
 			return iVal >= 1 && iVal <= 12;
 		},
-		parse: function(s,isNN) {
-			if (this.isNumber()) return Numb.prototype.parse.call(this,s,isNN);
-			return Text.prototype.parse.call(this,s,isNN);
+		parse: function(s) {
+			if (this.isNumber()) return Numb.prototype.parse.call(this, s);
+			return Text.prototype.parse.call(this, s);
 		},
 		toStr: function() {
 			if (this.isNumber()) return Numb.prototype.toStr.call(this);
@@ -331,29 +368,37 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	function Year() {
 		Numb.call(this);
 	}
-	JsSimpleDateFormat._Year = Year;
 	Year.__extends__(Numb, {
 		name: "year",
-		stC: 1900,
-		stY: 1970,
-		parse: function(s,isNN) {
-			var j = 0;
-			if (s.charAt(0) == '-') {
-				s = s.substr(1);
-				j++;
+		stC: 1900, //The century for two digits year
+		stY: 1970, //The begin of year for two digits year. Starts from this year up to 100 years later.
+		_adjustCentury: function() {
+			var iY = this.stC + this._parseVal;
+			if (iY <= this.stY) iY += 100;
+			this._parseVal = iY;
+		},
+		_isTwoDigitsYear: function(iDigitCount) {
+			return this._count < 3/*yy or y in pattern*/ && iDigitCount == 2/*exactly 2 digits in string, not less/more*/;
+		},
+		getParseValue: function(oFields) {
+			if (oFields.era && oFields.era.getParseValue(oFields) == 1) { //BC
+				return -this._parseVal + 1;
 			}
-			var i = Numb.prototype.parse.call(this,s,isNN);
-			if (i == -1) return -1;
-			if (j > 0) this._parseVal = -this._parseVal;
-			if (this._count < 3/*yy or y*/ && this._parseVal > 0 && i == 2/*exactly 2 digits, not less/more*/) {
-				var iY = this.stC + this._parseVal;
-				if (iY <= this.stY) iY += 100;
-				this._parseVal = iY;
+			return this._parseVal;
+		},
+		parse: function(s) {
+			var i = Numb.prototype.parse.call(this, s);
+			if (isNaN(this._parseVal)) return -1;
+			if (this._isTwoDigitsYear(i)) {
+				this._adjustCentury();
 			}
-			return i+j;
+			else if (this._parseVal <= 0) {
+				return -1;
+			}
+			return i;
 		},
 		toStr: function() {
-			if (this._count == 2 || this.isNetCompat && this._count == 1) {
+			if (this._count == 2) {
 				var sVal = (this.getNumber() % 100) + "";
 				if (sVal.length < 2 && this._count == 2) return "0"+sVal;
 				return sVal;
@@ -362,14 +407,13 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
-	var ltr = {};
-	JsSimpleDateFormat._ltr = ltr;
+	var ch = {};
 	
 	/** Era designator such as AD or BC */
-	ltr.G = function() {
+	ch.G = function() {
 		Text.call(this);
 	}
-	ltr.G.__extends__(Text, {
+	ch.G.__extends__(Text, {
 		name: "era",
 		getIndex: function() {
 			return (this.dt.getFullYear() > 0 ? 0 : 1);
@@ -382,23 +426,12 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
-	/** Era designator (.Net pattern) such as AD or BC */
-	ltr.g = function() {
-		ltr.G.call(this);
-	}
-	ltr.g.isNetLetter = true;
-	ltr.g.__extends__(ltr.G);
-	
-	ltr.y = function() {
+	ch.y = function() {
 		Year.call(this);
 	}
-	ltr.y.__extends__(Year, {
-		applyParseValue: function(oDate,oFields) {
-			if (oFields.era) {
-				if (oFields.era.getParseValue()==0 && this._parseVal<=0) return null;
-				if (oFields.era.getParseValue()==1 && this._parseVal>0) this._parseVal = -this._parseVal+1;
-			}
-			oDate.setFullYear(this._parseVal);
+	ch.y.__extends__(Year, {
+		applyParseValue: function(oDate, oFields) {
+			oDate.setFullYear(this.getParseValue(oFields));
 			return oDate;
 		},
 		getNumber: function() {
@@ -411,37 +444,39 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	});
 	
 	/** Week year. It may be different from y pattern at the last week of the year. */
-	ltr.Y = function() {
-		ltr.y.call(this);
+	ch.Y = function() {
+		ch.y.call(this);
 	}
-	ltr.Y.__extends__(ltr.y, {
+	ch.Y.getSaturday = function(oDate) {
+		return new Date(oDate.getFullYear(), oDate.getMonth(), oDate.getDate() - oDate.getDay() + 6);
+	};
+	ch.Y.__extends__(ch.y, {
 		name: "weekYear",
-		_getSaturday: function(oDate) {
-			return new Date(oDate.getFullYear(), oDate.getMonth(), oDate.getDate() - oDate.getDay() + 6);
-		},
-		applyParseValue: function(oDate,oFields) {
-			if (!oFields["year"]) {
-				if (oDate.getMonth() < 11 || oDate.getDate() < 25) oDate.setFullYear(this._parseVal);
+		applyParseValue: function(oDate, oFields) {
+			if (!oFields.year) {
+				var iYear = this.getParseValue(oFields);
+				if (oDate.getMonth() < 11 || oDate.getMonth() == 11 && oDate.getDate() < 25) //not last week of the year
+					oDate.setFullYear(iYear);
 				else {
-					oDate.setFullYear(this._parseVal - 1);
-					var iWY = this._getSaturday(oDate).getFullYear();
-					if (iWY < this._parseVal) oDate.setFullYear(this._parseVal);
+					oDate.setFullYear(iYear - 1);
+					var iWY = ch.Y.getSaturday(oDate).getFullYear();
+					if (iWY < iYear) oDate.setFullYear(iYear);
 				}
 			}
 			return oDate;
 		},
 		getValue: function() {
-			return this._getSaturday(this.dt).getFullYear();
+			return ch.Y.getSaturday(this.dt).getFullYear();
 		}
 	});
 	
 	/** Month */
-	ltr.L = function() {
+	ch.L = function() {
 		Month.call(this);
 	}
-	ltr.L.__extends__(Month, {
-		applyParseValue: function(oDate,oFields) {
-			var iVal = this.getParseValue(), iD = oDate.getDate();
+	ch.L.__extends__(Month, {
+		applyParseValue: function(oDate, oFields) {
+			var iVal = this.getParseValue(oFields);
 			oDate.setMonth(iVal);
 			if (iVal < oDate.getMonth()) oDate.setDate(0); //if the day exceeds the last day of the month then set it to the last day
 			return oDate;
@@ -455,7 +490,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		getNumber: function() {
 			return this.dt.getMonth() + 1;
 		},
-		getParseValue: function() {
+		getParseValue: function(oFields) {
 			return this.isNumber() ? this._parseVal-1 : this._parseVal;
 		},
 		getShortValues: function() {
@@ -464,16 +499,16 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	});
 	
 	/** Month */
-	ltr.M = function() {
-		ltr.L.call(this);
+	ch.M = function() {
+		ch.L.call(this);
 	}
-	ltr.M.__extends__(ltr.L); //It should overrides L to support context-sensitive form
+	ch.M.__extends__(ch.L); //It should overrides L to support context-sensitive form
 	
 	/** The day sequence number (day-th) in the specified year. Starting at Jan 1 which is numbered as 1 and so on until Dec 31 that will be numbered as 365 (366 in leap year). */
-	ltr.D = function() {
+	ch.D = function() {
 		Numb.call(this);
 	}
-	ltr.D.__extends__(Numb, {
+	ch.D.__extends__(Numb, {
 		_ends: [31,28,31,30,31,30,31,31,30,31,30,31],
 		name: "dayOfYear",
 		_checkLeapYear: function(oDate) {
@@ -482,10 +517,10 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 			oDt.setDate(1); oDt.setMonth(1); oDt.setDate(29); //Set to Feb 29 of this year if exists
 			if (oDt.getDate() == 29) this._ends[1] = 29; else this._ends[1] = 28; //If date doesnt change then Feb 29 of this year exists
 		},	
-		applyParseValue: function(oDate,oFields) {
-			if (oFields.year) if (oFields.year.applyParseValue(oDate,oFields) == null) return null;
+		applyParseValue: function(oDate, oFields) {
+			//if (oFields.year) if (oFields.year.applyParseValue(oDate,oFields) == null) return null;
 			this._checkLeapYear(oDate);
-			var arEnds = this._ends, iD = this.getParseValue(), iM = 0;
+			var arEnds = this._ends, iD = this.getParseValue(oFields), iM = 0;
 			while (iD > arEnds[iM] && iM < arEnds.length) iD -= arEnds[iM++];
 			if (iM >= arEnds.length) return null;
 			oDate.setDate(1);
@@ -509,14 +544,15 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	});
 	
 	/** Day name in a week such as Sunday, Monday, Tue etc. */
-	ltr.E = function() {
+	ch.E = function() {
 		Text.call(this);
 	}
-	ltr.E.__extends__(Text, {
+	ch.E.__extends__(Text, {
 		name: "dayOfWeek",
-		applyParseValue: function(oDate,oFields) {
+		applyParseValue: function(oDate, oFields) {
+			if (oFields.day || oFields.dayOfYear) return oDate; //day has been set
 			oDate.setDate(1);
-			oDate.setTime(oDate.getTime() + ((this._parseVal - oDate.getDay() + 7) % 7) * 86400000);
+			oDate.setTime(oDate.getTime() + ((this.getParseValue(oFields) - oDate.getDay() + 7) % 7) * 86400000);
 			return oDate;
 		},
 		getIndex: function() {
@@ -530,23 +566,17 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
-	/** The day number in a month. If it has 3 or more letters then it's the day name like ltr.E for .Net compatibility. */
-	ltr.d = function() {
-		ltr.D.call(this);
+	/** The day number in a month. */
+	ch.d = function() {
+		ch.D.call(this);
 	}
-	ltr.d.__extends__(ltr.D, ltr.E.prototype, {
+	ch.d.__extends__(ch.D, {
 		name: "day",
-		addCount: function() {
-			Ltr.prototype.addCount.call(this);
-			this.name = this.isNumber() ? "day" : ltr.E.prototype.name;
-		},
-		applyParseValue: function(oDate,oFields) {
-			if (!this.isNumber()) return ltr.E.prototype.applyParseValue.call(this,oDate,oFields);
-			
-			if (oFields.year) if (oFields.year.applyParseValue(oDate,oFields) == null) return null;
+		applyParseValue: function(oDate, oFields) {
+			//if (oFields.year) if (oFields.year.applyParseValue(oDate,oFields) == null) return null;
 			this._checkLeapYear(oDate);
-			if (oFields.month) if (oFields.month.applyParseValue(oDate,oFields) == null) return null;
-			var arEnds = this._ends, iD = this.getParseValue(), iM = oDate.getMonth();
+			//if (oFields.month) if (oFields.month.applyParseValue(oDate,oFields) == null) return null;
+			var arEnds = this._ends, iD = this.getParseValue(oFields), iM = oDate.getMonth();
 			if (iD < 1 || iD > arEnds[iM]) return null;
 			oDate.setDate(iD);
 			return oDate;
@@ -554,45 +584,45 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		getDay: function() {
 			return this.dt.getDate();
 		},
-		getValue: function() {
-			if (this.isNumber()) return ltr.D.prototype.getValue.call(this);
-			return ltr.E.prototype.getValue.call(this);
-		},
-		isNumber: function() {
-			return !this.isNetCompat || this._count < 3;
-		},
 		isValidVal: function(iVal) {
 			return iVal >= 1 && iVal <= 31;
-		},
-		parse: function(s,isNN) {
-			if (this.isNumber()) return ltr.D.prototype.parse.call(this,s,isNN);
-			return ltr.E.prototype.parse.call(this,s,isNN);
-		},
-		toStr: function() {
-			if (this.isNumber()) return ltr.D.prototype.toStr.call(this);
-			return ltr.E.prototype.toStr.call(this);
 		}
 	});
 	
 	/** The week sequence number (week-th) in the specified year */
-	ltr.w = function() {
-		ltr.D.call(this);
+	ch.w = function() {
+		ch.D.call(this);
 	}
-	ltr.w.__extends__(ltr.D, {
+	ch.w.needsToSet = function(oDate, oNewDate, oFields) {
+		var iFirstTime = oNewDate.getTime(),
+		    iLastTime = iFirstTime + 6 * 86400000, //86400000 == ms per day
+			iTime = oDate.getTime();
+
+		if (
+			(oFields.day || oFields.dayOfYear || oFields.dayOfWeek) //the date is specified
+			&& iFirstTime <= iTime && iTime <= iLastTime //the date is still in range of the week
+		) {
+			return false;
+		}
+		return true;
+	};
+	ch.w.__extends__(ch.D, {
 		name: "weekOfYear",
 		_resetMonth: function(oDate) {
 			oDate.setMonth(0);
 		},
-		applyParseValue: function(oDate,oFields) {
-			oDate.setDate(1);
-			this._resetMonth(oDate);
-			oDate.setTime(oDate.getTime() - oDate.getDay() * 86400000 + (this._parseVal - 1) * 7 * 86400000); //86400000 == ms per day
+		applyParseValue: function(oDate, oFields) {
+			var oDate2 = new Date(oDate.getTime());
+			oDate2.setDate(1);  //counted from the first day
+			this._resetMonth(oDate2);
+			oDate2.setDate(1 - oDate2.getDay() + (this.getParseValue(oFields) - 1) * 7); //set to sunday in the week
+
+			//needs not to set to the new date if current date is still in range of the week
+			if (ch.w.needsToSet(oDate, oDate2, oFields)) return oDate2;
 			return oDate;
 		},
-		getParseValue: function() {
-			return this.getValue();
-		},
 		getValue: function() {
+			if (ch.Y.getSaturday(this.dt).getFullYear() > this.dt.getFullYear()) return 1;
 			return this.getWeek();
 		},
 		getWeek: function() {
@@ -609,15 +639,27 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	});
 	
 	/** The week sequence number (week-th) in the specified month */
-	ltr.W = function() {
-		ltr.w.call(this);
+	ch.W = function() {
+		ch.w.call(this);
 	}
-	ltr.W.__extends__(ltr.w, {
+	ch.W.__extends__(ch.w, {
 		name: "weekOfMonth",
 		_resetMonth: function(oDate) {
 		},
+		applyParseValue: function(oDate, oFields) {
+			var oDate2 = ch.w.prototype.applyParseValue.call(this, oDate, oFields);
+			if (oDate2.getMonth() != oDate.getMonth()) {
+				var W = new ch.W();
+				W.dt = oDate2;
+				this._parseVal = W.getWeek();
+			}
+			return oDate2;
+		},
 		getDay: function() {
 			return this.dt.getDate();
+		},
+		getValue: function() {
+			return this.getWeek();
 		},
 		isValidVal: function(iVal) {
 			return iVal >= 1 && iVal <= 6;
@@ -625,15 +667,22 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	});
 	
 
-	/** The week-th in the month, if the first seven days in that month is the first week, the eightth day up to the forteenth day is the second week and so on. */
-	ltr.F = function() {
+	/** The week-th in the month: the first seven days in that month is the first week, the eightth day up to the forteenth day is the second week and so on. */
+	ch.F = function() {
 		Numb.call(this);
 	}
-	ltr.F.__extends__(Numb, {
+	ch.F.__extends__(Numb, {
 		name: "dayOfWeekInMonth",
-		applyParseValue: function(oDate,oFields) {
-			oDate.setDate((this.getParseValue() - 1) * 7 + 1);
-			oDate.setDate(oDate.getDate() + 7 - oDate.getDay());
+		applyParseValue: function(oDate, oFields) {
+			var oDate2 = new Date(oDate.getTime());
+			oDate2.setDate((this.getParseValue(oFields) - 1) * 7 + 1);
+			
+			//needs not to set to the new date if current date is still in range of the week
+			if (ch.w.needsToSet(oDate, oDate2, oFields)) {
+				//day is set to sunday in the week
+				if (oDate2.getDay() > 0) oDate2.setDate(oDate2.getDate() + 7 - oDate2.getDay());
+				return oDate2;
+			}
 			return oDate;
 		},
 		isValidVal: function(iVal) {
@@ -645,21 +694,23 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	});
 	
 	/** Day number of week (1 = Monday, ..., 7 = Sunday) */
-	ltr.u = function() {
+	ch.u = function() {
 		Numb.call(this);
 	}
-	ltr.u.__extends__(Numb, {
+	ch.u.__extends__(Numb, {
 		name: "dayOfWeek",
-		applyParseValue: function(oDate,oFields) {
-			oDate.setDate(1);
-			var iParseVal = this._parseVal;
-			if (iParseVal == 7) iParseVal = 0;
-			oDate.setTime(oDate.getTime() + ((iParseVal - oDate.getDay() + 7) % 7) * 86400000);
-			return oDate;
+		applyParseValue: function(oDate, oFields) {
+			return ch.E.prototype.applyParseValue.call(this, oDate, oFields);
 		},
-		getValue: function() {
+		getNumber: function() {
 			var iDay = this.dt.getDay();
 			return iDay == 0 ? 7 : iDay;
+		},
+		getParseValue: function(oFields) {
+			return this._parseVal == 7 ? 0 : this._parseVal;
+		},
+		getValue: function() {
+			return this.dt.getDay();
 		},
 		isValidVal: function(iVal) {
 			return 1 <= iVal && iVal <= 7;
@@ -667,10 +718,10 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	});
 	
 	/** AM/PM marker in time */
-	ltr.a = function() {
+	ch.a = function() {
 		Text.call(this);
 	}
-	ltr.a.__extends__(Text, {
+	ch.a.__extends__(Text, {
 		name: "ampm",
 		getIndex: function() {
 			return (this.dt.getHours() < 12 ? 0 : 1);
@@ -686,28 +737,14 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
-	/** AM/PM marker in time (.Net pattern) */
-	ltr.t = function() {
-		ltr.a.call(this);
-	}
-	ltr.t.isNetLetter = true;
-	ltr.t.__extends__(ltr.a, {
-		getShortValues: function() {
-			return this.fmtSb.getShortAmPmStrings();
-		},
-		isShort: function() {
-			return this._count == 1;
-		}
-	});
-	
 	/** Hour (0-23) */
-	ltr.H = function() {
+	ch.H = function() {
 		Numb.call(this);
 	}
-	ltr.H.__extends__(Numb, {
+	ch.H.__extends__(Numb, {
 		name: "hour",
-		applyParseValue: function(oDate,oFields) {
-			oDate.setHours(this.getParseValue());
+		applyParseValue: function(oDate, oFields) {
+			oDate.setHours(this.getParseValue(oFields));
 			return oDate;
 		},
 		getValue: function() {
@@ -719,11 +756,11 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	});
 	
 	/** Hour (1-24) */
-	ltr.k = function() {
-		ltr.H.call(this);
+	ch.k = function() {
+		ch.H.call(this);
 	}
-	ltr.k.__extends__(ltr.H, {
-		getParseValue: function() {
+	ch.k.__extends__(ch.H, {
+		getParseValue: function(oFields) {
 			return this._parseVal == 24 ? 0 : this._parseVal;
 		},
 		getNumber: function() {
@@ -736,19 +773,17 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	});
 	
 	/** Hour (0-11). Should be accompanied by AM/PM */
-	ltr.K = function() {
-		Numb.call(this);
+	ch.K = function() {
+		ch.H.call(this);
 	}
-	ltr.K.__extends__(Numb, {
-		name: "h12",
-		applyParseValue: function(oDate,oFields) {
-			var iVal = this.getParseValue();
-			if (oFields.ampm && oFields.ampm.getParseValue() == 1) iVal += 12;
-			oDate.setHours(iVal);
-			return oDate;
+	ch.K.__extends__(ch.H, {
+		getParseValue: function(oFields) {
+			var iVal = this._parseVal;
+			if (oFields.ampm && oFields.ampm.getParseValue(oFields) == 1) iVal += 12;
+			return iVal;
 		},
-		getValue: function() {
-			return this.dt.getHours() % 12;
+		getNumber: function() {
+			return this.getValue() % 12;
 		},
 		isValidVal: function(iVal) {
 			return iVal >= 0 && iVal <= 11;
@@ -756,15 +791,17 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	});
 	
 	/** Hour (1-12). Should be accompanied by AM/PM */
-	ltr.h = function() {
-		ltr.K.call(this);
+	ch.h = function() {
+		ch.K.call(this);
 	}
-	ltr.h.__extends__(ltr.K, {
-		getParseValue: function() {
-			return this._parseVal == 12 ? 0 : this._parseVal;
+	ch.h.__extends__(ch.K, {
+		getParseValue: function(oFields) {
+			var iVal = this._parseVal == 12 ? 0 : this._parseVal;
+			if (oFields.ampm && oFields.ampm.getParseValue(oFields) == 1) iVal += 12;
+			return iVal;
 		},
 		getNumber: function() {
-			var iH = this.dt.getHours() % 12;
+			var iH = this.getValue();
 			return (iH > 0 ? iH : 12);
 		},
 		isValidVal: function(iVal) {
@@ -773,13 +810,13 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	});
 	
 	/** Minute */
-	ltr.m = function() {
+	ch.m = function() {
 		Numb.call(this);
 	}
-	ltr.m.__extends__(Numb, {
+	ch.m.__extends__(Numb, {
 		name: "minute",
-		applyParseValue: function(oDate,oFields) {
-			oDate.setMinutes(this.getParseValue());
+		applyParseValue: function(oDate, oFields) {
+			oDate.setMinutes(this.getParseValue(oFields));
 			return oDate;
 		},
 		getValue: function() {
@@ -791,13 +828,13 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	});
 	
 	/** second */
-	ltr.s = function() {
+	ch.s = function() {
 		Numb.call(this);
 	}
-	ltr.s.__extends__(Numb, {
+	ch.s.__extends__(Numb, {
 		name: "second",
-		applyParseValue: function(oDate,oFields) {
-			oDate.setSeconds(this.getParseValue());
+		applyParseValue: function(oDate, oFields) {
+			oDate.setSeconds(this.getParseValue(oFields));
 			return oDate;
 		},
 		getValue: function() {
@@ -809,13 +846,13 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	});
 	
 	/** millisecond */
-	ltr.S = function() {
+	ch.S = function() {
 		Numb.call(this);
 	}
-	ltr.S.__extends__(Numb, {
+	ch.S.__extends__(Numb, {
 		name: "ms",
-		applyParseValue: function(oDate,oFields) {
-			oDate.setMilliseconds(this.getParseValue());
+		applyParseValue: function(oDate, oFields) {
+			oDate.setMilliseconds(this.getParseValue(oFields));
 			return oDate;
 		},
 		getValue: function() {
@@ -826,47 +863,22 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 		}
 	});
 	
-	/** millisecond (.Net pattern) */
-	ltr.f = function() {
-		ltr.S.call(this);
-	}
-	ltr.f.isNetLetter = true;
-	ltr.f.__extends__(ltr.S, {
-		isValidVal: function(iVal) {
-			var sVal = iVal + '';
-			if (sVal.length <= 3) return true;
-			return sVal.substr(3).replace('0', '') === '';
-		},
-		parse: function(s,isNN) {
-			var sVal = this._getNumberStr(s,isNN);
-			if (sVal.length == 0) return -1;
-			this._parseVal = parseInt((sVal+"00").substr(0,3));
-			return sVal.length;
-		},
-		toStr: function() {
-			var sVal = ("000"+this.getNumber()).substr(-3);
-			if (this._count == 1) sVal = sVal.substr(0,1);
-			else if (this._count == 2) sVal = sVal.substr(0,2);
-			else while (sVal.length < this._count) sVal = sVal + "0";
-			return sVal;
-		}
-	});
-	
 	/** General time zone */
-	ltr.z = function() {
+	ch.z = function() {
 		Text.call(this);
 	}
-	ltr.z.__extends__(Text, {
+	ch.z.__extends__(Text, {
 		name: "timezone",
-		_netRegex: [ /^(\+|-)(\d{1,2})/, /^(\+|-)(\d{2})/, /^(\+|-)(\d{1,2}):(\d{2})/ ],
 		_regex: /^(UTC|GMT[^+-]|GMT$)|^(GMT)((\+|-)(\d{1,2}):(\d{2}))|^(\+|-)(\d{2})(\d{2})/i,
 		_getTzComp: function() {
 			var tzo = this.dt.getTimezoneOffset();
 			var arComp = [];
 			arComp[0] = tzo > 0 ? "-" : "+";
 			tzo = Math.abs(tzo);
-			arComp[1] = ("0" + Math.floor(tzo / 60)).substr(-2);
-			arComp[2] = ("0" + (tzo % 60)).substr(-2);
+			var iHour = Math.floor(tzo / 60);
+    		arComp[1] = ("0" + iHour).slice(-2);
+			arComp[2] = ("0" + (tzo % 60)).slice(-2);
+			arComp[3] = iHour;
 			return arComp;
 		},
 		_setParseValue: function(sSign, sHour, sMinute) {
@@ -878,41 +890,27 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 			if (iDiff < -780 || iDiff > 840) return;
 			this._parseVal = iDiff;
 		},
-		applyParseValue: function(oDate,oFields) {
-			var diffTime = (oDate.getTimezoneOffset() + this.getParseValue()) * 60000;
+		applyParseValue: function(oDate, oFields) {
+			var diffTime = (oDate.getTimezoneOffset() + this.getParseValue(oFields)) * 60000;
 			oDate.setTime(oDate.getTime() - diffTime);
 			return oDate;
 		},
 		getValue: function() {
 			return this._parseVal;
 		},
-		parse: function(s,isNN) {
+		parse: function(s) {
 			var arMatch = this._regex.exec(s);
 			var sSign = "+", sHour = "0", sMinute = "0";
-			if (arMatch == null) {
-				if (this.isNetCompat) {
-					arMatch = this._count == 1 ? this._netRegex[0].exec(s)
-					        : this._count == 2 ? this._netRegex[1].exec(s)
-							: this._netRegex[2].exec(s);
-					if (arMatch != null) {
-						sSign = arMatch[1];
-						sHour = arMatch[2];
-						if (arMatch[3]) sMinute = arMatch[3];
-						this._setParseValue(sSign, sHour, sMinute);
-						if (!isNaN(this._parseVal)) return arMatch[0].length;
-					}
-				}
-				return -1;
-			}
-			if (arMatch[1]) { //UTC
-				this._parseVal = 0;
-			} else if (arMatch[2]) { //GMT+/-dd:dd
+			if (arMatch == null) return -1;
+			if (arMatch[1]) { // UTC/GMT
+				//this._parseVal = 0;
+			} else if (arMatch[2]) { // GMT+/-hh:mm
 				if (arMatch[3]) {
 					sSign = arMatch[4];
 					sHour = arMatch[5];
 					sMinute = arMatch[6];
 				}
-			} else {
+			} else { // +/-hhmm
 				sSign = arMatch[7];
 				sHour = arMatch[8];
 				sMinute = arMatch[9];
@@ -931,10 +929,10 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	});
 	
 	/** RFC 822 time zone */
-	ltr.Z = function() {
-		ltr.z.call(this);
+	ch.Z = function() {
+		ch.z.call(this);
 	}
-	ltr.Z.__extends__(ltr.z, {
+	ch.Z.__extends__(ch.z, {
 		toStr: function() {
 			var arComp = this._getTzComp();
 			return arComp[0] + arComp[1] + arComp[2];
@@ -942,14 +940,26 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 	});
 	
 	/** ISO 8601 time zone */
-	ltr.X = function() {
-		ltr.z.call(this);
+	ch.X = function() {
+		ch.z.call(this);
 	}
-	ltr.X.__extends__(ltr.z, {
-		_regex: [/^(\+|-)(\d{2})/, /^(\+|-)(\d{2})(\d{2})/, /^(\+|-)(\d{2}):(\d{2})/],
-		parse: function(s,isNN) {
+	ch.X.__extends__(ch.z, {
+		_regex: [
+			/^(\+|-)(\d{2})/,
+			/^(\+|-)(\d{2})(\d{2})/,
+			/^(\+|-)(\d{2}):(\d{2})/
+		],
+		addCount: function() {
+			ch.z.prototype.addCount.call(this);
+			if (this._count > 3) throw new FormatError("X letter must not be more than 3.");
+		},
+		parse: function(s) {
 			var sSign = "+", sHour = "0", sMinute = "0", arMatch = null;
-			if (this._count == 1) {
+			if (s.indexOf('Z') == 0) {
+                this._setParseValue(sSign, sHour, sMinute);
+                return 1;
+            }
+            if (this._count == 1) {
 				arMatch = this._regex[0].exec(s);
 			} else if (this._count == 2) {
 				arMatch = this._regex[1].exec(s);
@@ -966,6 +976,7 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 			return -1;
 		},
 		toStr: function() {
+			if (this.dt.getTimezoneOffset() == 0) return 'Z';
 			var arComp = this._getTzComp();
 			switch (this._count) {
 				case 1: return arComp[0] + arComp[1];
@@ -974,140 +985,207 @@ function JsSimpleDateFormat(sPattern,param,isNetCompat) {
 			return arComp[0] + arComp[1] + ":" + arComp[2];
 		}
 	});
-})();
 
-JsSimpleDateFormat.prototype = {
-_getDefaultPattern: function() {
-	return "dd MMMM yyyy hh:mm a";
-},
-_getInitDate: function() {
-	var oDt = new Date(0);
-	oDt.setTime(oDt.getTime() + oDt.getTimezoneOffset()*60000);
-	return oDt;
-},
-applyPattern: function(sPattern) {
-	this._arPtn = [];
-	var oLtr = JsSimpleDateFormat._ltr;
-	var s=new JsSimpleDateFormat._Str(""), c='', oPtn=null, clsPtn, isQ=false, sQ='', i=-1;
-	while (++i < sPattern.length) {
-		var c1 = sPattern.charAt(i);
-		if (c1 == "'") {
-			if (i < sPattern.length-1 && sPattern.charAt(i+1) == "'") { //escape a quote by using two quotes which means one quote
-				s.append("'");
-				i++;
-			} else {
-				isQ = !isQ;
-			}
-			c = '';
-		} else if (isQ) {
-			s.append(c1);
-		} else if (c1 == c) {
-			oPtn.addCount();
-		} else if ((clsPtn = oLtr[c1]) && (!this.isNetCompat && !clsPtn.isNetLetter || this.isNetCompat)) {
-			oPtn = new clsPtn();
-			if (s.toStr() != "") this._arPtn.push(s);
-			s = new JsSimpleDateFormat._Str("");
-			this._arPtn.push(oPtn);
-			c = c1;
-		} else {
-			s.append(c1);
-			c = '';
-		}
+	ch["'"] = function() {
+		this._flag = 0; //0: Begin, 1: Continue, 2: May be End, 3: Really End
 	}
-	if (s.toStr() != "") this._arPtn.push(s);
-	this._ptn = sPattern;
-},
-format: function(oDate) {
-	JsSimpleDateFormat._Ltr.prototype.isNetCompat = this.isNetCompat;
-	JsSimpleDateFormat._Ltr.prototype.fmtSb = this._fmtSb;
-	JsSimpleDateFormat._Ltr.prototype.dt = oDate;
-	var s = "", arPtn = this._arPtn;
-	for (var i=0; i<arPtn.length; i++) s += arPtn[i].toStr();
-	return s;
-},
-get2DigitYearStart: function() {
-	return this._stDt;
-},
-getDateFormatSymbols: function() {
-	return this._fmtSb;
-},
-//The order of fields that must be applied to the Date object as the result of parsing value
-_arFN: ["year","month","dayOfWeek","dayOfWeekInMonth","weekOfMonth","weekOfYear","dayOfYear",
-		"day", "weekYear", "hour","h12","minute","second","ms"],
-parse: function(s,oPos) {
-	JsSimpleDateFormat._Ltr.prototype.isNetCompat = this.isNetCompat;
-	JsSimpleDateFormat._Ltr.prototype.fmtSb = this._fmtSb;
-	JsSimpleDateFormat._Str.prototype.flexWhiteSpace = this.flexWhiteSpace;
-	JsSimpleDateFormat._Year.prototype.stY = this._stY;
-	JsSimpleDateFormat._Year.prototype.stC = this._stC;
-	
-	if (!oPos) oPos = {index:0, errorIndex:-1};
-	var i = oPos.index, j = 0, arPtn = this._arPtn, oFields = {};
-	while (j < arPtn.length) {
-		var oPtn = arPtn[j++];
-		var isNN = (j<arPtn.length) ? arPtn[j].isNumber() : false;
-		var k = oPtn.parse(s.substr(i),isNN);
-		if (k == -1) {
-			oPos.errorIndex = i;
-			return null;
-		}
-		
-		//Collects all fields inside the parsed string for consistency checks
-		if (oPtn instanceof JsSimpleDateFormat._Ltr) { 
-			var sFN = oPtn.name;
-			if (!this.isLenient && oFields[sFN]/*There has been the field whose the same name*/) {
-				if (oFields[sFN].getParseValue() != oPtn.getParseValue()) { //Both fiels must have the same value (consistent)
+	ch["'"].prototype = {
+		_char: "'",
+		append: function(c, oStr) {
+			if (this._flag == 3) return false;
+			if (c == this._char) {
+				if (this._flag == 0 || this._flag == 2) {
+					oStr.append(c); //escaped quote
+					this._flag = this._flag == 0 ? 3 : 1;
+				}
+				else /*if (this._flag == 1)*/ this._flag = 2;
+			}
+			else {
+				if (this._flag == 2) return false;
+				oStr.append(c);
+				this._flag = 1;
+			}
+			return true;
+		},
+		unterminated: function() {
+			if (this._flag == 2 || this._flag == 3) return; //actually reached the end (happens if the closing quote is the end of string)
+			throw new FormatError("Unterminated quote");
+		},
+	};
+
+	JsSimpleDateFormat.prototype = {
+		_ch: ch,
+		_getDefaultPattern: function() {
+			return "d MMMM yyyy hh:mm a";
+		},
+		_getInitDate: function() {
+			var oDt = new Date(0);
+			oDt.setTime(oDt.getTime() + oDt.getTimezoneOffset()*60000);
+			return oDt;
+		},
+		_setFormatSymbols: function(param) {
+			if (param) {
+				if (param instanceof JsDateFormatSymbols) this.setDateFormatSymbols(param);
+				else this.setDateFormatSymbols(new JsDateFormatSymbols(param));
+			} else {
+				this.setDateFormatSymbols(new JsDateFormatSymbols('en'));
+			}
+		},
+		applyPattern: function(sPattern) {
+			this._arPtn = [];
+			this._arPtn.pushNext = function(oPtn) {
+				if (this.length > 0) {
+					var oLastPtn = this[this.length - 1];
+					oLastPtn.next = oPtn;
+					oPtn.prev = oLastPtn;
+				}
+				this.push(oPtn);
+			};
+			var s = new Str(""), c = '', oChar = this._ch, oPtn = null, oStr = null, clsPtn, i = -1;
+			while (++i < sPattern.length) {
+				var c1 = sPattern.charAt(i);
+				if (oStr != null && oStr.append(c1, s) || (oStr = null)) {
+				} else if (c1 == c && (oPtn instanceof Ltr)) {
+					oPtn.addCount();
+				} else if (clsPtn = oChar[c1]) {
+					if (clsPtn.prototype instanceof Base) {
+						oPtn = new clsPtn();
+						if (s.toStr() != "") this._arPtn.pushNext(s);
+						s = new Str("");
+						this._arPtn.pushNext(oPtn);
+						c = c1;
+					}
+					else {
+						oStr = new clsPtn(s);
+						c = '';
+					}
+				} else {
+					s.append(c1);
+					c = '';
+				}
+			}
+			if (oStr != null) oStr.unterminated(s); 
+			if (s.toStr() != "") this._arPtn.pushNext(s);
+			this._ptn = sPattern;
+		},
+		format: function(oDate) {
+			Ltr.prototype.fmtSb = this._fmtSb;
+			Ltr.prototype.dt = oDate;
+			var s = "", arPtn = this._arPtn;
+			for (var i=0; i<arPtn.length; i++) s += arPtn[i].toStr();
+			return s;
+		},
+		get2DigitYearStart: function() {
+			return this._stDt;
+		},
+		getDateFormatSymbols: function() {
+			return this._fmtSb;
+		},
+		//The order of date-time components that must be applied to the Date object as the result of parsing value
+		_arFN: [
+			"year", "dayOfYear", //safe combination to set first (will set year-month-day)
+			"month", //day will be adjusted if exceeds the last date of month that will make sure we get the month we want
+			"day",
+			"dayOfWeek", //set if no `day` or `dayOfYear`. It sets the date indirectly to one of 1-7.
+			"weekYear", //set if no `year`. It's clear to set if `month` and `day` has been specified 
+			"dayOfWeekInMonth", "weekOfMonth", "weekOfYear", //week: needs not to set to the new date if `day` is still in the week
+			"hour", "minute", "second", "ms" //time: will no conflict
+		],
+		//The date-time component names that affect the calculation of other component value.
+		_mapFNMark: {
+			ampm: true,
+			era: true
+		},
+		parse: function(s, oPos) {
+			Ltr.prototype.fmtSb = this._fmtSb;
+			Str.prototype.flexWhiteSpace = this.flexWhiteSpace;
+			Year.prototype.stY = this._stY;
+			Year.prototype.stC = this._stC;
+			
+			if (!oPos) oPos = {index:0, errorIndex:-1};
+			var i = oPos.index, j = 0, arPtn = this._arPtn, oFields = {}, arDupl = [];
+			while (j < arPtn.length) {
+				var oPtn = arPtn[j++];
+				var k = oPtn.parse(s.substring(i));
+				if (k == -1) {
 					oPos.errorIndex = i;
 					return null;
 				}
-			} else {
-				oFields[sFN] = oPtn;
+				oPtn.__idx__ = i;
+				
+				var iFIdx = 1;
+				//Collects all date-time components inside the parsed string for consistency checks
+				if (oPtn instanceof Ltr) { 
+					var sFN = oPtn.name;
+					if (!sFN) sFN = '_' + iFIdx++;
+					if (!this.isLenient && oFields[sFN]/*There has been the component whose the same name*/) {
+						//Collects the duplicate components to check later. In strict mode all the same components must have the same value 
+						if (this._mapFNMark[sFN]) arDupl.unshift(oPtn); //The markers will be checked first.
+						else arDupl.push(oPtn); 
+					} else {
+						oFields[sFN] = oPtn; //If there are duplicate components then the last one will be used
+					}
+				}
+				i += k;
 			}
+			/* At this point, the string matches the pattern */
+
+			//Checks consitency all duplicate components
+			for (var j = 0; j < arDupl.length; j++) {
+				var oPtn = arDupl[j];
+				if (oFields[oPtn.name].getParseValue(oFields) != oPtn.getParseValue(oFields)) { //Both components must have the same value (consistent)
+					oPos.errorIndex = oPtn.__idx__;
+					return null;
+				}
+			}
+			
+			var oDate = this._getInitDate();
+			/* Applies all parsing values to the Date object that will returned */
+			for (j = 0; j < this._arFN.length; j++) {
+				var sFN = this._arFN[j];
+				if (oFields[sFN]) {
+					oDate = oFields[sFN].applyParseValue(oDate, oFields);
+					if (oDate == null) { //Error in applying the parsing value
+						oPos.errorIndex = oPos.index + i; //Consider the index after the pattern is the error index
+						return null;
+					}
+				}
+			}
+			
+			Ltr.prototype.dt = oDate; //The date object as the final result
+			if (!this.isLenient) {
+				/* Checks the consistency between the parsing value (getParseValue) and the final value (getValue) of all components.
+				The final value becomes different because the later component changes it. */
+				for (var sFN in oFields) if (oFields[sFN].getParseValue(oFields) != oFields[sFN].getValue()) { //Error if not consistent
+					oPos.errorIndex = oPos.index + i; //Consider the index after the pattern is the error index
+					return null;
+				}
+			}
+			if (oFields.timezone) oFields.timezone.applyParseValue(oDate,oFields); //timezone must be the last because it can change the other
+			                                                                       // components' values which influences the consistency checking
+			oPos.index = i;
+			return oDate;
+		},
+		set2DigitYearStart: function(oStartDate) {
+			this._stDt = oStartDate;
+			var iY = Math.abs(oStartDate.getFullYear());
+			this._stY = iY;
+			this._stC = iY - (iY%100);
+		},
+		setDateFormatSymbols: function(oFormatSymbols) {
+			this._fmtSb = oFormatSymbols;
+		},
+		toPattern: function() {
+			return this._ptn;
 		}
-		i += k;
-	}
-	/* At this point, the string matches the pattern */
-	
-	var oDate = this._getInitDate();
-	/* Applies all parsing values to the Date object that will returned */
-	for (j=0; j<this._arFN.length; j++) {
-		var sFN = this._arFN[j];
-		if (oFields[sFN]) if (oFields[sFN].applyParseValue(oDate,oFields) == null) { //Error in applying the parsing value
-			oPos.errorIndex = oPos.index + i; //Consider the index after the pattern is the error index
-			return null;
-		}
-	}
-	
-	JsSimpleDateFormat._Ltr.prototype.dt = oDate; //The date object as the final result
-	if (!this.isLenient) {
-		/* Checks the consistency between the parsing value (getParseValue) and the final value (getValue) of all fields.
-		   The final value becomes different because the later field changes it. */
-		for (var sFN in oFields) if (oFields[sFN].getParseValue() != oFields[sFN].getValue()) { //Error if not consistent
-			oPos.errorIndex = oPos.index + i; //Consider the index after the pattern is the error index
-			return null;
-		}
-	}
-	if (oFields.timezone) oFields.timezone.applyParseValue(oDate,oFields); //timezone must be the last because it can change the other components' values which influences the consistency checking
-	
-	oPos.index = i;
-	return oDate;
-},
-set2DigitYearStart: function(oStartDate) {
-	this._stDt = oStartDate;
-	var iY = Math.abs(oStartDate.getFullYear());
-	this._stY = iY;
-	this._stC = iY - (iY%100);
-},
-setDateFormatSymbols: function(oFormatSymbols) {
-	this._fmtSb = oFormatSymbols;
-},
-toPattern: function() {
-	return this._ptn;
-}
-};
+	};
+})();
 
 
 if (typeof(module) == 'object' && !!module.exports) {
-	module.exports.JsDateFormatSymbols = JsDateFormatSymbols;
-	module.exports.JsSimpleDateFormat = JsSimpleDateFormat;
+	module.exports = {
+		FormatError: FormatError,
+		JsDateFormatSymbols: JsDateFormatSymbols,
+		JsSimpleDateFormat: JsSimpleDateFormat
+	};
 }

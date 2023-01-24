@@ -1,3 +1,12 @@
+v3.0
+====
+- New class NetDateTimeFormat which suports only .NET compatible date and time patterns.
+- By exixtence of class NetDateTimeFormat, now, JsSimpleDateFormat only supports Java compatible date and time patterns.
+  isNetCompat property is dropped and also the third parameter for constructor is dropped.
+- New classes for formatting/parsing duration: TimerFormat and TimerFormatSymbols
+- Adds some test scripts
+
+
 v2.1
 ====
 Extensions/changes to version 2.0.1:
