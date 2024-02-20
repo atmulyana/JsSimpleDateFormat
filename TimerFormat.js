@@ -22,7 +22,7 @@ function TimerFormatSymbols(symbols) {
 	    oSymbols = TimerFormatSymbols.__symbols__[symbols];
     }
 	this._symbols = {};
-	for (p in oDefSymbols) {
+	for (var p in oDefSymbols) {
 		this._symbols[p] = oSymbols[p] || oDefSymbols[p];
 	}
 }
@@ -128,12 +128,12 @@ var TimerFormat;
     var isModule = typeof(module) == 'object' && !!module.exports, plugin;
     if (typeof(NetDateTimeFormat) != 'function' && isModule) {
         plugin = require('./NetDateTimeFormat.js');
-        NetDateTimeFormat = plugin.NetDateTimeFormat;
+        var NetDateTimeFormat = plugin.NetDateTimeFormat;
     }
     if (typeof(JsSimpleDateFormat) != 'function' && isModule) {
         plugin = require('./JsSimpleDateFormat.js');
-        JsSimpleDateFormat = plugin.JsSimpleDateFormat;
-        FormatError = plugin.FormatError;
+        var JsSimpleDateFormat = plugin.JsSimpleDateFormat;
+        var FormatError = plugin.FormatError;
     }
 
     var oTicks = {

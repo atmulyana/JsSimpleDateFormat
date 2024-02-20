@@ -14,7 +14,7 @@ Visit https://github.com/atmulyana/JsSimpleDateFormat
 Function.prototype.__extends__ = function(fParent,oExtMembers) {
 	this.prototype = new fParent();
 	for (var i = 1; i<arguments.length; i++) {
-		for (m in arguments[i]) {
+		for (var m in arguments[i]) {
 			if (this.prototype[m] !== arguments[i][m]) //needs to check because assignment always creates new property on instance even if the ancestors instance already has the same property with the same value
 				this.prototype[m] = arguments[i][m];
 		}
@@ -36,7 +36,7 @@ function JsDateFormatSymbols(sLocale) {
 	if (!JsDateFormatSymbols.__symbols__[sLocale]) sLocale = 'en';
 	var oSymbols = JsDateFormatSymbols.__symbols__[sLocale],
 	    oDefSymbols = JsDateFormatSymbols.__symbols__.en;
-	for (p in oDefSymbols) {
+	for (var p in oDefSymbols) {
 		var ar = [].concat(oSymbols[p] || oDefSymbols[p]);
 		this._setMap(ar);
 		this['_'+p] = ar;

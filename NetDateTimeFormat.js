@@ -21,8 +21,8 @@ var NetDateTimeFormat;
     var isModule = typeof(module) == 'object' && !!module.exports;
     if (typeof(JsSimpleDateFormat) != 'function' && isModule) {
         var plugin = require('./JsSimpleDateFormat.js');
-        JsSimpleDateFormat = plugin.JsSimpleDateFormat;
-        FormatError = plugin.FormatError;
+        var JsSimpleDateFormat = plugin.JsSimpleDateFormat;
+        var FormatError = plugin.FormatError;
     }
 
     NetDateTimeFormat = function(sPattern, param) {
