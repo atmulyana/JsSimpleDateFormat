@@ -1,5 +1,5 @@
 /*! ****
-JsSimpleDateFormat v3.0.0
+JsSimpleDateFormat v3.0.2
 This library is for formatting and parsing date time
 
 Copyright (C) AT Mulyana (atmulyana@yahoo.com)
@@ -124,16 +124,22 @@ TimerFormatSymbols.__symbols__ = {
 };
 
 var TimerFormat;
+if (typeof(NetDateTimeFormat) == 'undefined') {
+    var NetDateTimeFormat;
+}
+if (typeof(JsSimpleDateFormat) == 'undefined') {
+    var JsSimpleDateFormat, FormatError;
+}
 (function() {
     var isModule = typeof(module) == 'object' && !!module.exports, plugin;
     if (typeof(NetDateTimeFormat) != 'function' && isModule) {
         plugin = require('./NetDateTimeFormat.js');
-        var NetDateTimeFormat = plugin.NetDateTimeFormat;
+        NetDateTimeFormat = plugin.NetDateTimeFormat;
     }
     if (typeof(JsSimpleDateFormat) != 'function' && isModule) {
         plugin = require('./JsSimpleDateFormat.js');
-        var JsSimpleDateFormat = plugin.JsSimpleDateFormat;
-        var FormatError = plugin.FormatError;
+        JsSimpleDateFormat = plugin.JsSimpleDateFormat;
+        FormatError = plugin.FormatError;
     }
 
     var oTicks = {

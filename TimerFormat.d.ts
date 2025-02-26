@@ -1,5 +1,5 @@
 /*! ****
-JsSimpleDateFormat v3.0.0
+JsSimpleDateFormat v3.0.2
 This library is for formatting and parsing date time
 
 Copyright (C) AT Mulyana (atmulyana@yahoo.com)
@@ -54,7 +54,7 @@ export class TimerFormatSymbols {
 }
 
 export class TimerFormat extends JsSimpleDateFormat {
-    constructor(sPattern: string, param: TimerFormatSymbols | string | undefined);
+    constructor(sPattern: string, param?: TimerFormatSymbols | string);
     approxFormat(oDate: Date | number, sPrefix?: string, sSuffix?: string): string;
     format(oDate: Date | number): string;
     getTimerFormatSymbols(): TimerFormatSymbols;

@@ -1,5 +1,5 @@
 /*! ****
-JsSimpleDateFormat v3.0.0
+JsSimpleDateFormat v3.0.2
 This library is for formatting and parsing date time
 
 Copyright (C) AT Mulyana (atmulyana@yahoo.com)
@@ -764,7 +764,7 @@ function JsSimpleDateFormat(sPattern, param) {
 			return this._parseVal == 24 ? 0 : this._parseVal;
 		},
 		getNumber: function() {
-			var iH = this.dt.getHours();
+			var iH = this.getValue();
 			return (iH > 0 ? iH : 24);
 		},
 		isValidVal: function(iVal) {
@@ -801,7 +801,7 @@ function JsSimpleDateFormat(sPattern, param) {
 			return iVal;
 		},
 		getNumber: function() {
-			var iH = this.getValue();
+			var iH = ch.K.prototype.getNumber.apply(this);
 			return (iH > 0 ? iH : 12);
 		},
 		isValidVal: function(iVal) {

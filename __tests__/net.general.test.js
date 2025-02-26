@@ -1,4 +1,3 @@
-const {JsSimpleDateFormat} = require('../JsSimpleDateFormat');
 const {NetDateTimeFormat} = require('../NetDateTimeFormat');
 const {getTzComp} = require('./common');
 
@@ -82,17 +81,39 @@ test('parsing, locale: id', () => {
 
 test('format hour', () => {
     let oDate = new Date();
-    let oDf = new JsSimpleDateFormat('H h a');
+    let oDf1 = new NetDateTimeFormat('H h t');
+    let oDf2 = new NetDateTimeFormat('H h tt');
     
     oDate.setHours(0);
-    expect(oDf.format(oDate)).toBe('0 12 AM');
+    expect(oDf1.format(oDate)).toBe('0 12 A');
+    expect(oDf2.format(oDate)).toBe('0 12 AM');
+
+    oDate.setHours(11);
+    expect(oDf1.format(oDate)).toBe('11 11 A');
+    expect(oDf2.format(oDate)).toBe('11 11 AM');
     
     oDate.setHours(12);
-    expect(oDf.format(oDate)).toBe('12 12 PM');
+    expect(oDf1.format(oDate)).toBe('12 12 P');
+    expect(oDf2.format(oDate)).toBe('12 12 PM');
+
+    oDate.setHours(23);
+    expect(oDf1.format(oDate)).toBe('23 11 P');
+    expect(oDf2.format(oDate)).toBe('23 11 PM');
 });
 
 test('parse hour', () => {
-    let oDf = new JsSimpleDateFormat('H h a');
-    expect( oDf.parse('0 12 AM')?.getHours() ).toBe(0);
-    expect( oDf.parse('12 12 PM')?.getHours() ).toBe(12);
+    let oDf1 = new NetDateTimeFormat('H h t');
+    let oDf2 = new NetDateTimeFormat('H h tt');
+
+    expect( oDf1.parse('0 12 A')?.getHours() ).toBe(0);
+    expect( oDf2.parse('0 12 AM')?.getHours() ).toBe(0);
+
+    expect( oDf1.parse('11 11 A')?.getHours() ).toBe(11);
+    expect( oDf2.parse('11 11 AM')?.getHours() ).toBe(11);
+    
+    expect( oDf1.parse('12 12 P')?.getHours() ).toBe(12);
+    expect( oDf2.parse('12 12 PM')?.getHours() ).toBe(12);
+
+    expect( oDf1.parse('23 11 P')?.getHours() ).toBe(23);
+    expect( oDf2.parse('23 11 PM')?.getHours() ).toBe(23);
 });

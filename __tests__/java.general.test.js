@@ -134,12 +134,20 @@ test('format hour', () => {
     oDate.setHours(0);
     expect(oDf.format(oDate)).toBe('0 24 0 12 AM');
     
+    oDate.setHours(11);
+    expect(oDf.format(oDate)).toBe('11 11 11 11 AM');
+    
     oDate.setHours(12);
     expect(oDf.format(oDate)).toBe('12 12 0 12 PM');
+
+    oDate.setHours(23);
+    expect(oDf.format(oDate)).toBe('23 23 11 11 PM');
 });
 
 test('parse hour', () => {
     let oDf = new JsSimpleDateFormat('H k K h a');
     expect( oDf.parse('0 24 0 12 AM')?.getHours() ).toBe(0);
+    expect( oDf.parse('11 11 11 11 AM')?.getHours() ).toBe(11);
     expect( oDf.parse('12 12 0 12 PM')?.getHours() ).toBe(12);
+    expect( oDf.parse('23 23 11 11 PM')?.getHours() ).toBe(23);
 });
