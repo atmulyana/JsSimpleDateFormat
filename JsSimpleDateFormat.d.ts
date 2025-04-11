@@ -42,7 +42,7 @@ export class JsSimpleDateFormat {
     format(oDate: Date): string;
     get2DigitYearStart(): Date;
     getDateFormatSymbols(): JsDateFormatSymbols;
-    parse(s: string, oPos?: ParsingPosition): Date;
+    parse(s: string, oPos?: ParsingPosition): Date | null;
     set2DigitYearStart(oStartDate: Date): void;
     setDateFormatSymbols(oFormatSymbols: JsDateFormatSymbols): void;
     toPattern(): string;
