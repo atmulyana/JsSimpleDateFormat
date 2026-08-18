@@ -1,8 +1,8 @@
 /*! ****
-JsSimpleDateFormat v3.0.2
+JsSimpleDateFormat v3.0.4
 This library is for formatting and parsing date time
 
-Copyright (C) AT Mulyana (atmulyana@yahoo.com)
+Copyright (C) AT Mulyana <atmulyana@yahoo.com>
 
 This library is free software; you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License version 3.0
@@ -27,7 +27,7 @@ interface TimerSymbols {
     years: string;
 }
 
-export class TimerFormatSymbols {
+export declare class TimerFormatSymbols {
     constructor(symbols: TimerSymbols | string);
     getFewSeconds(): string;
     getAMinute(): string;
@@ -51,11 +51,26 @@ export class TimerFormatSymbols {
     setMonths(s: string): void;
     setAYear(s: string): void;
     setYears(s: string): void;
+    static __symbols__: {
+        [code: string]: {
+            fewSeconds: string,
+            aMinute: string,
+            minutes: string,
+            anHour: string,
+            hours: string,
+            aDay: string,
+            days: string,
+            aMonth: string,
+            months: string,
+            aYear: string,
+            years: string,
+        }
+    };
 }
 
-export class TimerFormat extends JsSimpleDateFormat {
-    constructor(sPattern: string, param?: TimerFormatSymbols | string);
-    approxFormat(oDate: Date | number, sPrefix?: string, sSuffix?: string): string;
+export declare class TimerFormat extends JsSimpleDateFormat {
+    constructor(sPattern?: string | null, param?: TimerFormatSymbols | string);
+    approxFormat(oDate: Date | number, sPrefix?: string | null, sSuffix?: string | null): string;
     format(oDate: Date | number): string;
     getTimerFormatSymbols(): TimerFormatSymbols;
     setTimerFormatSymbols(oFormatSymbols: TimerFormatSymbols): void;

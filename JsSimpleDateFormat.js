@@ -1,8 +1,8 @@
 /*! ****
-JsSimpleDateFormat v3.0.2
+JsSimpleDateFormat v3.0.4
 This library is for formatting and parsing date time
 
-Copyright (C) AT Mulyana (atmulyana@yahoo.com)
+Copyright (C) AT Mulyana <atmulyana@yahoo.com>
 
 This library is free software; you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License version 3.0
@@ -11,6 +11,7 @@ See http://gnu.org/licenses/lgpl.html
 
 Visit https://github.com/atmulyana/JsSimpleDateFormat
 *****/
+'use strict';
 Function.prototype.__extends__ = function(fParent,oExtMembers) {
 	this.prototype = new fParent();
 	for (var i = 1; i<arguments.length; i++) {

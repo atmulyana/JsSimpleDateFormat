@@ -1,8 +1,8 @@
 /*! ****
-JsSimpleDateFormat v3.0.2
+JsSimpleDateFormat v3.0.4
 This library is for formatting and parsing date time
 
-Copyright (C) AT Mulyana (atmulyana@yahoo.com)
+Copyright (C) AT Mulyana <atmulyana@yahoo.com>
 
 This library is free software; you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License version 3.0
@@ -11,10 +11,10 @@ See http://gnu.org/licenses/lgpl.html
 
 Visit https://github.com/atmulyana/JsSimpleDateFormat
 *****/
-export class FormatError extends Error {
+export declare class FormatError extends Error {
 }
 
-export class JsDateFormatSymbols {
+export declare class JsDateFormatSymbols {
     constructor(sLocale: string);
     getAmPmStrings(): string[];
     getShortAmPmStrings(): string[];
@@ -29,6 +29,16 @@ export class JsDateFormatSymbols {
     setShortMonths(arShortMonths: string[]): void;
     setShortWeekdays(arShortWeekdays: string[]): void;
     setWeekdays(arWeekdays: string[]): void;
+    static __symbols__: {
+        [code: string]: {
+            amPmStrings: [string, string],
+            eras: [string, string],
+            months: [string, string, string, string, string, string, string, string, string, string, string, string],
+            shortMonths: [string, string, string, string, string, string, string, string, string, string, string, string],
+            shortWeekdays: [string, string, string, string, string, string, string],
+            weekdays: [string, string, string, string, string, string, string],
+        }
+    };
 }
 
 interface ParsingPosition {
@@ -36,8 +46,8 @@ interface ParsingPosition {
     errorIndex?: number;
 }
 
-export class JsSimpleDateFormat {
-    constructor(sPattern: string, param?: JsDateFormatSymbols | string);
+export declare class JsSimpleDateFormat {
+    constructor(sPattern?: string | null, param?: JsDateFormatSymbols | string);
     applyPattern(sPattern: string): void;
     format(oDate: Date): string;
     get2DigitYearStart(): Date;
