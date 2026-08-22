@@ -1,5 +1,5 @@
 /*! ****
-JsSimpleDateFormat v3.0.4
+JsSimpleDateFormat v3.0.5
 This library is for formatting and parsing date time
 
 Copyright (C) AT Mulyana <atmulyana@yahoo.com>

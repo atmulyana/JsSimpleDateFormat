@@ -1,5 +1,5 @@
 /*! ****
-JsSimpleDateFormat v3.0.4
+JsSimpleDateFormat v3.0.5
 This library is for formatting and parsing date time
 
 Copyright (C) AT Mulyana <atmulyana@yahoo.com>
@@ -12,7 +12,20 @@ See http://gnu.org/licenses/lgpl.html
 Visit https://github.com/atmulyana/JsSimpleDateFormat
 *****/
 'use strict';
-Function.prototype.__extends__ = function(fParent,oExtMembers) {
+function __setProperty(obj, propName, value) {
+	if (propName in obj) return;
+	if (Object.defineProperty) {
+		Object.defineProperty(obj, propName, {
+			value: value,
+			writable: false
+		});
+	}
+	else {
+		obj[propName] = value;
+	}
+}
+
+__setProperty(Function.prototype, '__extends__', function(fParent, oExtMembers) {
 	this.prototype = new fParent();
 	for (var i = 1; i<arguments.length; i++) {
 		for (var m in arguments[i]) {
@@ -20,13 +33,11 @@ Function.prototype.__extends__ = function(fParent,oExtMembers) {
 				this.prototype[m] = arguments[i][m];
 		}
 	}
-}
+});
 
-if (!String.prototype.trim) {
-	String.prototype.trim = function() {
-		return this.replace(/^\s+/,'').replace(/\s+$/,'');
-	};
-}
+__setProperty(String.prototype, 'trim', function() {
+	return this.replace(/^\s+/,'').replace(/\s+$/,'');
+});
 
 function FormatError(message) {
 	this.message = message;
@@ -1185,7 +1196,7 @@ function JsSimpleDateFormat(sPattern, param) {
 
 if (typeof(module) == 'object' && !!module.exports) {
 	module.exports = {
-		FormatError: FormatError,
+		// FormatError: FormatError,
 		JsDateFormatSymbols: JsDateFormatSymbols,
 		JsSimpleDateFormat: JsSimpleDateFormat
 	};
